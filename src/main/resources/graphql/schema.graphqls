@@ -1,0 +1,55 @@
+type Query {
+    bookById(id: ID): Book
+    createCharacter(character: inputCharacter): Character
+}
+
+type Book {
+    id: ID
+    name: String
+    pageCount: Int
+    author: Author
+}
+
+type Author {
+    id: ID
+    firstName: String
+    lastName: String
+}
+
+type Character {
+    name: String
+    aspectLevel: Int
+    aspects1: Int
+    aspects2: Int
+    specialty1: Int
+    specialty2: Int
+    ancestryTrait: Int
+    ancestryName: String
+    accountId: ID
+    baseFitness: Int
+    baseTechnique: Int
+    baseFocus: Int
+    baseSense: Int
+    gold: Int
+    silver: Int
+    copper: Int
+}
+
+input inputCharacter {
+    name: String
+    aspectLevel: Int
+    aspects1: Int
+    aspects2: Int
+    specialty1: Int
+    specialty2: Int
+    ancestryTrait: Int
+    ancestryName: String
+    accountId: ID
+    baseFitness: Int
+    baseTechnique: Int
+    baseFocus: Int
+    baseSense: Int
+    gold: Int
+    silver: Int
+    copper: Int
+}
