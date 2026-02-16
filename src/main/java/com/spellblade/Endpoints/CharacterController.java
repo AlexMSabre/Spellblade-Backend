@@ -37,7 +37,7 @@ public class CharacterController {
         characterCol.insertOne(character);
 
 		Character found = characterCol.find(eq("name", character.getName())).first();
-        System.out.println(found);
+        System.out.println(character.getName());
 
         return found;
     }
