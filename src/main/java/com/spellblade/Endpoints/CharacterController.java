@@ -8,6 +8,7 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -19,6 +20,7 @@ import static com.mongodb.client.model.Filters.eq;
 import com.spellblade.model.Character;
 
 @Controller
+@CrossOrigin(origins = "*")
 public class CharacterController {
     @QueryMapping
     public Character createCharacter(@Argument Character character) {    
@@ -34,10 +36,15 @@ public class CharacterController {
         MongoClient mongoClient = MongoClients.create(clientSettings);
         MongoDatabase spellblade = mongoClient.getDatabase("Spellblade").withCodecRegistry(codecRegistry);
         MongoCollection<Character> characterCol = spellblade.getCollection("CHARACTER", Character.class);
-        characterCol.insertOne(character);
+        Character found;
+        if(character.getId() == null){
+            characterCol.insertOne(character);
+		    found = characterCol.find(eq("name", character.getName())).first();
+        } else {
+            found = characterCol.findOneAndReplace(eq("_id", character.getId()), character);
+        }
 
-		Character found = characterCol.find(eq("name", character.getName())).first();
-        System.out.println(character.getName());
+        System.out.println(found);
 
         return found;
     }

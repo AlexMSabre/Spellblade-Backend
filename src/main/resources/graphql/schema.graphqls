@@ -3,6 +3,7 @@ type Query {
 }
 
 type Character {
+    id: ID
     name: String
     aspectLevel: Int
     aspects1: Int
@@ -11,7 +12,7 @@ type Character {
     specialty2: Int
     ancestryTrait: Int
     ancestryName: String
-    accountId: ID
+    accountId: String
     baseFitness: Int
     baseTechnique: Int
     baseFocus: Int
@@ -22,6 +23,7 @@ type Character {
 }
 
 input inputCharacter {
+    id: ID
     name: String
     aspectLevel: Int
     aspects1: Int
@@ -30,7 +32,7 @@ input inputCharacter {
     specialty2: Int
     ancestryTrait: Int
     ancestryName: String
-    accountId: ID
+    accountId: String
     baseFitness: Int
     baseTechnique: Int
     baseFocus: Int
