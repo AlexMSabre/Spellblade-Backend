@@ -1,9 +1,11 @@
 type Query {
-    createCharacter(character: inputCharacter): Character
+    createCharacter(characterDAO: inputCharacterDAO): CharacterDAO
+    createOrLoginUser(userDAO: inputUserDAO): UserDAO
 }
 
-type Character {
-    id: ID
+type CharacterDAO {
+    id: String
+    accountId: String
     name: String
     aspectLevel: Int
     aspects1: Int
@@ -12,7 +14,6 @@ type Character {
     specialty2: Int
     ancestryTrait: Int
     ancestryName: String
-    accountId: String
     baseFitness: Int
     baseTechnique: Int
     baseFocus: Int
@@ -22,8 +23,9 @@ type Character {
     copper: Int
 }
 
-input inputCharacter {
-    id: ID
+input inputCharacterDAO {
+    id: String
+    accountId: String
     name: String
     aspectLevel: Int
     aspects1: Int
@@ -32,7 +34,6 @@ input inputCharacter {
     specialty2: Int
     ancestryTrait: Int
     ancestryName: String
-    accountId: String
     baseFitness: Int
     baseTechnique: Int
     baseFocus: Int
@@ -40,4 +41,16 @@ input inputCharacter {
     gold: Int
     silver: Int
     copper: Int
+}
+
+type UserDAO {
+    id: String
+    username: String
+    email: String
+}
+
+input inputUserDAO {
+    id: String
+    username: String
+    email: String
 }

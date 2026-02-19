@@ -8,7 +8,7 @@ import lombok.Data;
 public class Character {
 
 	private ObjectId id;
-    private String accountId;
+    private ObjectId accountId;
 	private String name;
 	private int aspectLevel;
     private int specialty1;
@@ -27,13 +27,14 @@ public class Character {
 
     public Character(){}
 
-    public Character(String name, String accountId, String ancestryName, 
+    public Character(String name, String accountId, int aspectLevel, String ancestryName, 
                         int ancestryTrait, int aspects1, int aspects2, 
                         int specialty1, int specialty2, int baseFitness, 
                         int baseTechnique, int baseFocus, int baseSense,
                         int gold, int silver, int copper){
         this.name = name;
-        this.accountId = accountId;
+        this.accountId = new ObjectId(accountId);
+        this.aspectLevel = aspectLevel;
         this.ancestryName = ancestryName;
         this.ancestryTrait = ancestryTrait;
         this.aspects1 = aspects1;
@@ -47,6 +48,27 @@ public class Character {
         this.gold = gold;
         this.silver = silver;
         this.copper = copper;
+    }
+
+    public Character(CharacterDAO character){
+        if(character.getId()!=null)
+            this.id = new ObjectId(character.getId());
+        this.name = character.getName();
+        this.accountId = new ObjectId(character.getAccountId());
+        this.ancestryName = character.getAncestryName();
+        this.aspectLevel = character.getAspectLevel();
+        this.ancestryTrait = character.getAncestryTrait();
+        this.aspects1 = character.getAspects1();
+        this.aspects2 = character.getAspects2();
+        this.specialty1 = character.getSpecialty1();
+        this.specialty2 = character.getSpecialty2();
+        this.baseFitness = character.getBaseFitness();
+        this.baseTechnique = character.getBaseTechnique();
+        this.baseFocus = character.getBaseFocus();
+        this.baseSense = character.getBaseSense();
+        this.gold = character.getGold();
+        this.silver = character.getSilver();
+        this.copper = character.getCopper();
     }
 
 }
