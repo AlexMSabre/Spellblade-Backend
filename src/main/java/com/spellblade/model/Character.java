@@ -8,7 +8,7 @@ import lombok.Data;
 public class Character {
 
 	private ObjectId id;
-    private ObjectId accountId;
+    private ObjectId userId;
 	private String name;
 	private int aspectLevel;
     private int specialty1;
@@ -27,13 +27,13 @@ public class Character {
 
     public Character(){}
 
-    public Character(String name, String accountId, int aspectLevel, String ancestryName, 
+    public Character(String name, String userId, int aspectLevel, String ancestryName, 
                         int ancestryTrait, int aspects1, int aspects2, 
                         int specialty1, int specialty2, int baseFitness, 
                         int baseTechnique, int baseFocus, int baseSense,
                         int gold, int silver, int copper){
         this.name = name;
-        this.accountId = new ObjectId(accountId);
+        this.userId = new ObjectId(userId);
         this.aspectLevel = aspectLevel;
         this.ancestryName = ancestryName;
         this.ancestryTrait = ancestryTrait;
@@ -54,7 +54,7 @@ public class Character {
         if(character.getId()!=null)
             this.id = new ObjectId(character.getId());
         this.name = character.getName();
-        this.accountId = new ObjectId(character.getAccountId());
+        this.userId = new ObjectId(character.getUserId());
         this.ancestryName = character.getAncestryName();
         this.aspectLevel = character.getAspectLevel();
         this.ancestryTrait = character.getAncestryTrait();

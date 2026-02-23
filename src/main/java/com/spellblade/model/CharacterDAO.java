@@ -6,7 +6,7 @@ import lombok.Data;
 public class CharacterDAO {
 
 	private String id;
-    private String accountId;
+    private String userId;
 	private String name;
 	private int aspectLevel;
     private int specialty1;
@@ -28,7 +28,7 @@ public class CharacterDAO {
     public CharacterDAO(Character character){
         this.name = character.getName();
         this.id = character.getId().toString();
-        this.accountId = character.getAccountId().toString();
+        this.userId = character.getUserId().toString();
         this.aspectLevel = character.getAspectLevel();
         this.ancestryName = character.getAncestryName();
         this.ancestryTrait = character.getAncestryTrait();

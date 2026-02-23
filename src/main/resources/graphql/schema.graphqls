@@ -1,11 +1,12 @@
 type Query {
     createCharacter(characterDAO: inputCharacterDAO): CharacterDAO
     createOrLoginUser(userDAO: inputUserDAO): UserDAO
+    charactersByAccId(userId: String): [CharacterDAO]
 }
 
 type CharacterDAO {
     id: String
-    accountId: String
+    userId: String
     name: String
     aspectLevel: Int
     aspects1: Int
@@ -21,6 +22,10 @@ type CharacterDAO {
     gold: Int
     silver: Int
     copper: Int
+}
+
+type CharacterList {
+    characters: [CharacterDAO]
 }
 
 input inputCharacterDAO {
