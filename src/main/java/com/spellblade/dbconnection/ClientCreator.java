@@ -8,12 +8,12 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 
 public class ClientCreator{
 
-    public static MongoClient createClient(){
+    public static MongoDatabase createClient(){
         ConnectionString connectionString = new ConnectionString("mongodb://127.0.0.1:27017");
 
         CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
@@ -23,7 +23,7 @@ public class ClientCreator{
                     .codecRegistry(codecRegistry)
                     .build();
 
-        return MongoClients.create(clientSettings);
+        return MongoClients.create(clientSettings).getDatabase("Spellblade");
     }
 
 }

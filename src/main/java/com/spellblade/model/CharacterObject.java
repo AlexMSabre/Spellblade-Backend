@@ -5,10 +5,10 @@ import org.bson.types.ObjectId;
 import lombok.Data;
 
 @Data
-public class Character {
+public class CharacterObject {
 
 	private ObjectId id;
-    private ObjectId userId;
+    private String userId;
 	private String name;
 	private int aspectLevel;
     private int specialty1;
@@ -25,15 +25,15 @@ public class Character {
     private int silver;
     private int copper;
 
-    public Character(){}
+    public CharacterObject(){}
 
-    public Character(String name, String userId, int aspectLevel, String ancestryName, 
+    public CharacterObject(String name, String userId, int aspectLevel, String ancestryName, 
                         int ancestryTrait, int aspects1, int aspects2, 
                         int specialty1, int specialty2, int baseFitness, 
                         int baseTechnique, int baseFocus, int baseSense,
                         int gold, int silver, int copper){
         this.name = name;
-        this.userId = new ObjectId(userId);
+        this.userId = userId;
         this.aspectLevel = aspectLevel;
         this.ancestryName = ancestryName;
         this.ancestryTrait = ancestryTrait;
@@ -50,11 +50,11 @@ public class Character {
         this.copper = copper;
     }
 
-    public Character(CharacterDAO character){
+    public CharacterObject(CharacterDAO character){
         if(character.getId()!=null)
             this.id = new ObjectId(character.getId());
         this.name = character.getName();
-        this.userId = new ObjectId(character.getUserId());
+        this.userId = character.getUserId();
         this.ancestryName = character.getAncestryName();
         this.aspectLevel = character.getAspectLevel();
         this.ancestryTrait = character.getAncestryTrait();

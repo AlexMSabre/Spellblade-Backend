@@ -25,10 +25,10 @@ public class CharacterDAO {
 
     public CharacterDAO(){}
 
-    public CharacterDAO(Character character){
+    public CharacterDAO(CharacterObject character){
         this.name = character.getName();
         this.id = character.getId().toString();
-        this.userId = character.getUserId().toString();
+        this.userId = character.getUserId();
         this.aspectLevel = character.getAspectLevel();
         this.ancestryName = character.getAncestryName();
         this.ancestryTrait = character.getAncestryTrait();
