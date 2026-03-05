@@ -1,9 +1,9 @@
 type Query {
-    createCharacter(characterDAO: inputCharacterDAO): CharacterDAO
-    charactersByAccId(userId: String): [CharacterDAO]
+    createOrFindCharacter(character: inputCharacterObject): CharacterObject
+    charactersByUserId(userId: String): [CharacterObject]
 }
 
-type CharacterDAO {
+type CharacterObject {
     id: String
     userId: String
     name: String
@@ -23,11 +23,7 @@ type CharacterDAO {
     copper: Int
 }
 
-type CharacterList {
-    characters: [CharacterDAO]
-}
-
-input inputCharacterDAO {
+input inputCharacterObject {
     id: String
     userId: String
     name: String
@@ -45,16 +41,4 @@ input inputCharacterDAO {
     gold: Int
     silver: Int
     copper: Int
-}
-
-type UserDAO {
-    id: String
-    username: String
-    email: String
-}
-
-input inputUserDAO {
-    id: String
-    username: String
-    email: String
 }

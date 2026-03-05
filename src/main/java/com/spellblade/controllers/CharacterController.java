@@ -1,54 +1,36 @@
 package com.spellblade.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import static com.mongodb.client.model.Filters.eq;
-import com.spellblade.dbconnection.ClientCreator;
-import com.spellblade.model.CharacterDAO;
 import com.spellblade.model.CharacterObject;
+import com.spellblade.repository.CharacterObjectRepository;
 
+//the endpoints for everything related to characters
 @Controller
 public class CharacterController {
 
-    @QueryMapping
-    public CharacterDAO createCharacter(@Argument CharacterDAO characterDAO) {
-        CharacterObject character = new CharacterObject(characterDAO);
+    private final CharacterObjectRepository characters;
 
-            MongoDatabase spellblade = ClientCreator.createClient();
-        MongoCollection<CharacterObject> characterCol = spellblade.getCollection("CHARACTER", CharacterObject.class);
-        CharacterObject found;
-        if (character.getId() == null) {
-            characterCol.insertOne(character);
-            found = characterCol.find(eq("name", character.getName())).first();
-        } else {
-            found = characterCol.findOneAndReplace(eq("_id", character.getId()), character);
-        }
-
-        return new CharacterDAO(found);
+    public CharacterController(CharacterObjectRepository characters){
+        this.characters = characters;
     }
 
+    //creates/finds characters
+    //if Id provided, find the character, else create a new one
     @QueryMapping
-    public List<CharacterDAO> charactersByAccId(@Argument String userId) {
+    public CharacterObject createOrFindCharacter(@Argument CharacterObject character) {
+        return character.getId() == null ?
+             characters.save(character) : 
+             characters.findById(character.getId()).orElseThrow();
+    }
 
-        List<CharacterDAO> found = new ArrayList<>();
-
-        if (userId != null) {
-
-            MongoDatabase spellblade = ClientCreator.createClient();
-            MongoCollection<CharacterObject> characterCol = spellblade.getCollection("CHARACTER", CharacterObject.class);
-            characterCol.find(eq("userId", userId)).forEach((a) -> {
-                System.out.println(a);
-                found.add(new CharacterDAO(a));
-            });
-        }
-
-        return found;
+    //See Tin
+    @QueryMapping
+    public List<CharacterObject> charactersByUserId(@Argument String userId) {
+        return characters.findByUserId(userId);
     }
 }

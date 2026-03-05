@@ -8,6 +8,8 @@ import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+//main method!! dont worry about this.
+
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
 public class SpellbladeBackendApplication {
 

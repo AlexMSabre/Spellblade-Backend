@@ -1,13 +1,18 @@
 package com.spellblade.model;
 
-import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
 
+//the model for accessing Characters in the DB
+//@ Document Defines this POJO as belonging to the Character repository
+//@ Data causes the POJO methods to auto-generate
+@Document("CHARACTER")
 @Data
 public class CharacterObject {
 
-	private ObjectId id;
+	@Id private String id;
     private String userId;
 	private String name;
 	private int aspectLevel;
@@ -26,49 +31,5 @@ public class CharacterObject {
     private int copper;
 
     public CharacterObject(){}
-
-    public CharacterObject(String name, String userId, int aspectLevel, String ancestryName, 
-                        int ancestryTrait, int aspects1, int aspects2, 
-                        int specialty1, int specialty2, int baseFitness, 
-                        int baseTechnique, int baseFocus, int baseSense,
-                        int gold, int silver, int copper){
-        this.name = name;
-        this.userId = userId;
-        this.aspectLevel = aspectLevel;
-        this.ancestryName = ancestryName;
-        this.ancestryTrait = ancestryTrait;
-        this.aspects1 = aspects1;
-        this.aspects2 = aspects2;
-        this.specialty1 = specialty1;
-        this.specialty2 = specialty2;
-        this.baseFitness = baseFitness;
-        this.baseTechnique = baseTechnique;
-        this.baseFocus = baseFocus;
-        this.baseSense = baseSense;
-        this.gold = gold;
-        this.silver = silver;
-        this.copper = copper;
-    }
-
-    public CharacterObject(CharacterDAO character){
-        if(character.getId()!=null)
-            this.id = new ObjectId(character.getId());
-        this.name = character.getName();
-        this.userId = character.getUserId();
-        this.ancestryName = character.getAncestryName();
-        this.aspectLevel = character.getAspectLevel();
-        this.ancestryTrait = character.getAncestryTrait();
-        this.aspects1 = character.getAspects1();
-        this.aspects2 = character.getAspects2();
-        this.specialty1 = character.getSpecialty1();
-        this.specialty2 = character.getSpecialty2();
-        this.baseFitness = character.getBaseFitness();
-        this.baseTechnique = character.getBaseTechnique();
-        this.baseFocus = character.getBaseFocus();
-        this.baseSense = character.getBaseSense();
-        this.gold = character.getGold();
-        this.silver = character.getSilver();
-        this.copper = character.getCopper();
-    }
 
 }
