@@ -1,6 +1,11 @@
 type Query {
-    createOrFindCharacter(character: inputCharacterObject): CharacterObject
+    saveCharacter(characterDAO: inputCharacterDAO): CharacterDAO
     charactersByUserId(userId: String): [CharacterObject]
+    createInventoryItem(inventoryItem: inputInventory): InventoryDAO
+    getCharacterInventory(characterId: String): [InventoryDAO]
+    getCharacterInventoryByType(characterId: String, itemType: String): [InventoryDAO]
+    getItemListByType(itemType: String): [Item]
+    getWeaponList: [Item]
 }
 
 type CharacterObject {
@@ -18,6 +23,7 @@ type CharacterObject {
     baseTechnique: Int
     baseFocus: Int
     baseSense: Int
+    proficiencies: String
     gold: Int
     silver: Int
     copper: Int
@@ -38,7 +44,84 @@ input inputCharacterObject {
     baseTechnique: Int
     baseFocus: Int
     baseSense: Int
+    proficiencies: String
     gold: Int
     silver: Int
     copper: Int
+}
+
+type InventoryDAO {
+    inventory: Inventory
+    item: Item
+}
+
+input inputInventoryDAO {
+    inventory: inputInventory
+    item: inputItem
+}
+
+type Inventory {
+    id: String
+    characterId: String
+    itemId: String
+    equipped: Boolean
+    proficiency: Int
+    quantity: Int
+}
+
+input inputInventory {
+    id: String
+    characterId: String
+    itemId: String
+    equipped: Boolean
+    proficiency: Int
+    quantity: Int
+}
+
+type Item {
+    id: String
+    name: String
+    itemType: String
+    subtype: String
+    equippable: Boolean
+    size: String
+    weight: Float
+    description1: String
+    description2: String
+    description3: String
+    attack1String: String
+    attack2String: String
+    attack3String: String
+    effectId: String
+    baseCost: Int
+    rarity: String
+}
+
+input inputItem {
+    id: String
+    name: String
+    itemType: String
+    subtype: String
+    equippable: Boolean
+    size: String
+    weight: Float
+    description1: String
+    description2: String
+    description3: String
+    attack1String: String
+    attack2String: String
+    attack3String: String
+    effectId: String
+    baseCost: Int
+    rarity: String
+}
+
+type CharacterDAO {
+    inventory: [InventoryDAO]
+    character: CharacterObject
+}
+
+input inputCharacterDAO {
+    inventory: [inputInventoryDAO]
+    character: inputCharacterObject
 }
