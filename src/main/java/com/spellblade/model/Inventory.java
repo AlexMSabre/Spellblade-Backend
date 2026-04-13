@@ -16,4 +16,12 @@ public class Inventory {
     private int proficiency;
     private int quantity;
     
+    public Inventory(){}
+
+    public Inventory(String itemId, String characterId, int proficiency, int quantity){
+        this.itemId = itemId;
+        this.characterId = characterId;
+        this.proficiency = proficiency;
+        this.quantity = quantity;
+    }
 }

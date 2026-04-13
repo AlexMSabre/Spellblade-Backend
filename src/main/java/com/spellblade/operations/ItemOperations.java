@@ -55,4 +55,40 @@ public class ItemOperations{
         });
         return results;
     }
+
+    public List<Inventory> calculateDefaultQuantity(Item item, String characterId){
+        int quantity = 1;
+        boolean hasAmmo = false;
+        //checks if the item requires ammo.  
+        //all weapon types should have the name of the ammo type as the second word
+        String[] itemTypeName = item.getItemType().split(" ");
+        if(itemTypeName.length > 1){
+            switch(item.getItemType().split(" ")[1]){
+                case "Bullet" ->  {quantity = 24; hasAmmo = true;} 
+                case "Arrow" -> {quantity = 30; hasAmmo = true;}
+            }
+        }
+
+        //checks if the subtype is one that requires a qty greater than 1
+        switch(item.getSubtype()){
+            case "Boomerang", "Nail", "Stake" -> quantity = 3;
+            case "Throwing Knife" -> quantity = 8;
+            case "Shuriken" -> quantity = 12;
+            case "Javelin" -> quantity = 4;
+        }
+
+        //if it doesnt have ammo, make just the one inventory entry
+        //if it does, make an entry for the weapon and another for the ammo
+        List<Inventory> result = new ArrayList<>();
+        if(!hasAmmo)
+            result.add(new Inventory(item.getId(), characterId, 1, quantity));
+        else {
+            Item ammo = items.findByName(item.getItemType().split(" ")[1]);
+            result.add(new Inventory(item.getId(), characterId, 1, 1));
+            result.add(new Inventory(ammo.getId(), characterId, 1, quantity));
+        }
+
+        return result;
+
+    }
 }

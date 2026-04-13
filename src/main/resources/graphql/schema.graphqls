@@ -1,6 +1,7 @@
 type Query {
     saveCharacter(characterDAO: inputCharacterDAO): CharacterDAO
     charactersByUserId(userId: String): [CharacterObject]
+    characterById(characterId: String): CharacterDAO
     createInventoryItem(inventoryItem: inputInventory): InventoryDAO
     getCharacterInventory(characterId: String): [InventoryDAO]
     getCharacterInventoryByType(characterId: String, itemType: String): [InventoryDAO]

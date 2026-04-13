@@ -25,5 +25,4 @@ public class Item {
     private String effectId;
     private int baseCost;
     private String rarity;
-    
 }
