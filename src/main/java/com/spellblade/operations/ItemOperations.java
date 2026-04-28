@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.spellblade.model.Inventory;
-import com.spellblade.model.InventoryDAO;
+import com.spellblade.model.dao.InventoryDAO;
 import com.spellblade.model.Item;
+import com.spellblade.model.dao.ProficiencyDAO;
 import com.spellblade.repository.InventoryRepository;
 import com.spellblade.repository.ItemLkpRepository;
 
@@ -87,8 +88,24 @@ public class ItemOperations{
             result.add(new Inventory(item.getId(), characterId, 1, 1));
             result.add(new Inventory(ammo.getId(), characterId, 1, quantity));
         }
-
         return result;
+    }
 
+    public List<ProficiencyDAO> getProficiencyNames(String proficiencies){
+        //split the proficiencies apart
+        String[] proficiencyIds = proficiencies.split(",");
+        List<ProficiencyDAO> results = new ArrayList();
+
+        for(String prof : proficiencyIds){
+            //if a character has mastery in a weapon, it will be marked with a "-m" at the end.
+            //so remove the -m if it exists before grabbing the data, 
+            if(!prof.equals("null")){
+                String[] mastery = prof.split("-");
+                Item result = items.findById(mastery[0]).orElseThrow();
+                //and use the length to tell if -m exists
+                results.add(new ProficiencyDAO(result, mastery.length>1));
+            }
+        }
+        return results;
     }
 }

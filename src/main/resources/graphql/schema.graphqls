@@ -2,11 +2,15 @@ type Query {
     saveCharacter(characterDAO: inputCharacterDAO): CharacterDAO
     charactersByUserId(userId: String): [CharacterObject]
     characterById(characterId: String): CharacterDAO
+    fullCharacterById(characterId: String): CharacterDAO
     createInventoryItem(inventoryItem: inputInventory): InventoryDAO
     getCharacterInventory(characterId: String): [InventoryDAO]
     getCharacterInventoryByType(characterId: String, itemType: String): [InventoryDAO]
     getItemListByType(itemType: String): [Item]
     getWeaponList: [Item]
+    getProficiencyNames(proficiencies: String): [ProficiencyDAO]
+    getTalentAndAspectsData(talent1Name: String, talent2Name: String): [TalentDAO]
+    getTalentsList: [String]
 }
 
 type CharacterObject {
@@ -16,8 +20,8 @@ type CharacterObject {
     aspectLevel: Int
     aspects1: Int
     aspects2: Int
-    specialty1: Int
-    specialty2: Int
+    talent1: String
+    talent2: String
     ancestryTrait: Int
     ancestryName: String
     baseFitness: Int
@@ -37,8 +41,8 @@ input inputCharacterObject {
     aspectLevel: Int
     aspects1: Int
     aspects2: Int
-    specialty1: Int
-    specialty2: Int
+    talent1: String
+    talent2: String
     ancestryTrait: Int
     ancestryName: String
     baseFitness: Int
@@ -117,12 +121,48 @@ input inputItem {
     rarity: String
 }
 
+type Aspect {
+    id: String
+    name: String
+    talentName: String
+    flag: Int
+    description: String
+}
+
+type Talent {
+    id: String
+    name: String
+    abilities: String
+    description: String
+    hpBonus: Int
+    prioritySkills: String
+    role: String
+    complexity: Int
+    keystone: String
+    capstone: String
+    effectId: String
+    keystoneEffectId: String
+}
+
 type CharacterDAO {
     inventory: [InventoryDAO]
     character: CharacterObject
+    aspects: [Aspect]
+    talents: [Talent]
+    proficiencies: [ProficiencyDAO]
 }
 
 input inputCharacterDAO {
     inventory: [inputInventoryDAO]
     character: inputCharacterObject
+}
+
+type ProficiencyDAO {
+    item: Item
+    mastery: Boolean
+}
+
+type TalentDAO { 
+    talent: Talent
+    aspects: [Aspect]
 }

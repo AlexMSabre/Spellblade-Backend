@@ -1,4 +1,7 @@
-package com.spellblade.model;
+package com.spellblade.model.dao;
+
+import com.spellblade.model.Inventory;
+import com.spellblade.model.Item;
 
 import lombok.Data;
 

@@ -17,8 +17,8 @@ public class CharacterObject {
     private String userId;
 	private String name;
 	private int aspectLevel;
-    private int specialty1;
-    private int specialty2;
+    private String talent1;
+    private String talent2;
     private int aspects1;
     private int aspects2;
     private String ancestryName;
