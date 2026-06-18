@@ -8,9 +8,13 @@ type Query {
     getCharacterInventoryByType(characterId: String, itemType: String): [InventoryDAO]
     getItemListByType(itemType: String): [Item]
     getWeaponList: [Item]
+    getTalentsList: [String]
+    getAncestryList: [Ancestry]
     getProficiencyNames(proficiencies: String): [ProficiencyDAO]
     getTalentAndAspectsData(talent1Name: String, talent2Name: String): [TalentDAO]
-    getTalentsList: [String]
+    calculateState(state: inputCharacterState, character: inputCharacterObject): CalculatedState
+    getCharacterStateById(id: String): CharacterState
+    addEffect(effectName: String, state: inputCharacterState): CharacterDAO
 }
 
 type CharacterObject {
@@ -22,16 +26,14 @@ type CharacterObject {
     aspects2: Int
     talent1: String
     talent2: String
-    ancestryTrait: Int
+    size: String
+    ancestryTrait: String
     ancestryName: String
     baseFitness: Int
     baseTechnique: Int
     baseFocus: Int
     baseSense: Int
     proficiencies: String
-    gold: Int
-    silver: Int
-    copper: Int
 }
 
 input inputCharacterObject {
@@ -43,16 +45,55 @@ input inputCharacterObject {
     aspects2: Int
     talent1: String
     talent2: String
-    ancestryTrait: Int
+    size: String
+    ancestryTrait: String
     ancestryName: String
     baseFitness: Int
     baseTechnique: Int
     baseFocus: Int
     baseSense: Int
     proficiencies: String
-    gold: Int
-    silver: Int
-    copper: Int
+}
+
+type CharacterState {
+    id: String
+    characterId: String
+    hitPoints: Int
+    armor: Int
+    manaPoints: Int
+    activeEffects: String
+    inactiveEffects: String
+}
+
+input inputCharacterState {
+    id: String
+    characterId: String
+    hitPoints: Int
+    armor: Int
+    manaPoints: Int
+    activeEffects: String
+    inactiveEffects: String
+}
+
+type CalculatedState {
+    characterId: String 
+    hitPointsMax: Int
+    hitPoints: Int
+    armorMax: Int
+    armorMin: Int
+    armor: Int
+    woundsMax: Int
+    wounds: Int
+    manaMax: Int
+    manaPoints: Int
+    evasion: Int
+    hexResist: Int
+    movement: Int
+    encumbrance: Int
+    fitness: Int
+    technique: Int
+    focus: Int
+    sense: Int
 }
 
 type InventoryDAO {
@@ -97,7 +138,7 @@ type Item {
     attack1String: String
     attack2String: String
     attack3String: String
-    effectId: String
+    effectName: String
     baseCost: Int
     rarity: String
 }
@@ -116,9 +157,19 @@ input inputItem {
     attack1String: String
     attack2String: String
     attack3String: String
-    effectId: String
+    effectName: String
     baseCost: Int
     rarity: String
+}
+
+type Effect {
+    id: String
+    name: String
+    description: String
+    charProperty: String
+    effectType: Int
+    conditionalCheck: String
+    effect: String
 }
 
 type Aspect {
@@ -126,6 +177,12 @@ type Aspect {
     name: String
     talentName: String
     flag: Int
+    description: String
+}
+
+type Ancestry {
+    id: String
+    name: String
     description: String
 }
 
@@ -150,11 +207,14 @@ type CharacterDAO {
     aspects: [Aspect]
     talents: [Talent]
     proficiencies: [ProficiencyDAO]
+    characterState: CharacterState
+    calculatedState: CalculatedState
 }
 
 input inputCharacterDAO {
     inventory: [inputInventoryDAO]
     character: inputCharacterObject
+    characterState: inputCharacterState
 }
 
 type ProficiencyDAO {

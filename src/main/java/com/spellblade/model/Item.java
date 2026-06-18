@@ -21,8 +21,8 @@ public class Item {
     private String description3;
     private String attack1String;
     private String attack2String;
-    private String attack3String;
-    private String effectId;
+    private String attack3String; 
+    private String effectName;
     private int baseCost;
     private String rarity;
 }

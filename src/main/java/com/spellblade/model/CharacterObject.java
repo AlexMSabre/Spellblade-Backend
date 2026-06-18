@@ -22,15 +22,13 @@ public class CharacterObject {
     private int aspects1;
     private int aspects2;
     private String ancestryName;
-    private int ancestryTrait;
+    private String ancestryTrait;
     private int baseFitness;
     private int baseTechnique;
     private int baseFocus;
     private int baseSense;
+    private String size;
     private String proficiencies;
-    private int gold;
-    private int silver;
-    private int copper;
 
     public CharacterObject(){}
 

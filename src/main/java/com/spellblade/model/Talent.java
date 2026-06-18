@@ -23,4 +23,9 @@ public class Talent {
     private String keystoneEffectId;
     
     public Talent(){}
+
+//bare minimum constructor
+    public Talent(String role){
+        this.role = role;
+    }
 }

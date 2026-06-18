@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.spellblade.model.Talent;
+import com.spellblade.model.Ancestry;
 
 
 //The Repository object for the Items
@@ -13,6 +13,6 @@ import com.spellblade.model.Talent;
 //(see: https://docs.spring.io/spring-data/mongodb/reference/repositories/query-methods-details.html)
 
 
-public interface TalentLkpRepository extends MongoRepository<Talent, String> {  
-    Optional<Talent> findByName(String name);
+public interface AncestryRepository extends MongoRepository<Ancestry, String> {  
+    Optional<Ancestry> findByName(String name);
 }

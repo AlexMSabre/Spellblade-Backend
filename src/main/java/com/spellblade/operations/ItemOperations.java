@@ -24,11 +24,13 @@ public class ItemOperations{
     public void saveUpdateItems(List<InventoryDAO> newInventoryDAO, String characterId){
         List<Inventory> newInventory = extractInventoryList(newInventoryDAO);
         List<Inventory> removeList = getcharacterInventory(characterId);
+        System.out.println("-----Items------");
 
         for(Inventory inventoryItem : newInventory){
             removeList.removeIf((e)->e.getId().equals(inventoryItem.getId()));
             inventoryItem.setCharacterId(characterId);
             inventory.save(inventoryItem);
+            System.out.println(inventoryItem);
         }
 
         removeList.forEach((e)->{inventory.delete(e);});

@@ -1,12 +1,9 @@
 package com.spellblade.controllers;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -43,7 +40,7 @@ public class TalentController {
 
     private TalentDAO getTalentData(String talentName) {
         TalentDAO result = new TalentDAO();
-        result.setTalent(talents.findByName(talentName));
+        result.setTalent(talents.findByName(talentName).orElse(new Talent()));
         List<Aspect> aspectList = aspects.findByTalentName(talentName);
         Collections.sort(aspectList, (Aspect i1, Aspect i2) -> i1.getFlag() - i2.getFlag());
         result.setAspects(aspectList);

@@ -1,6 +1,5 @@
 package com.spellblade.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import com.spellblade.model.Inventory;
 import com.spellblade.model.dao.InventoryDAO;
 import com.spellblade.model.Item;
-import com.spellblade.model.dao.ProficiencyDAO;
 import com.spellblade.operations.ItemOperations;
 import com.spellblade.repository.InventoryRepository;
 import com.spellblade.repository.ItemLkpRepository;

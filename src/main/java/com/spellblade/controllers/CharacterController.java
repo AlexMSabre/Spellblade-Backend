@@ -7,21 +7,28 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
+import com.spellblade.model.Ancestry;
 import com.spellblade.model.Aspect;
-import com.spellblade.model.dao.CharacterDAO;
+import com.spellblade.model.CalculatedState;
 import com.spellblade.model.CharacterObject;
+import com.spellblade.model.CharacterState;
 import com.spellblade.model.Inventory;
-import com.spellblade.model.dao.InventoryDAO;
 import com.spellblade.model.Item;
-import com.spellblade.model.dao.ProficiencyDAO;
 import com.spellblade.model.Talent;
+import com.spellblade.model.dao.CharacterDAO;
+import com.spellblade.model.dao.InventoryDAO;
+import com.spellblade.model.dao.ProficiencyDAO;
 import com.spellblade.operations.AspectOperations;
 import com.spellblade.operations.ItemOperations;
+import com.spellblade.operations.StateOperations;
+import com.spellblade.repository.AncestryRepository;
 import com.spellblade.repository.AspectLkpRepository;
 import com.spellblade.repository.CharacterObjectRepository;
+import com.spellblade.repository.CharacterStateRepository;
+import com.spellblade.repository.EffectRepository;
 import com.spellblade.repository.InventoryRepository;
 import com.spellblade.repository.ItemLkpRepository;
-import com.spellblade.repository.TalentLkpRepository;
+import com.spellblade.repository.TalentLkpRepository; 
 
 //the endpoints for everything related to characters
 @Controller
@@ -29,41 +36,47 @@ public class CharacterController {
 
     private final CharacterObjectRepository characters;
     private final ItemLkpRepository items;
-    private final InventoryRepository inventory;
-    private final AspectLkpRepository aspects;
     private final TalentLkpRepository talents;
+    private final CharacterStateRepository states;
 
-    
     private final ItemOperations itemOperations;
     private final AspectOperations aspectOperations;
+    private final StateOperations stateOperations;
+    private final AncestryRepository ancestries;
 
     public CharacterController(CharacterObjectRepository characters, ItemLkpRepository items, 
-        InventoryRepository inventory, AspectLkpRepository aspects, TalentLkpRepository talents) {
+        InventoryRepository inventory, AspectLkpRepository aspects, TalentLkpRepository talents,
+        CharacterStateRepository states, EffectRepository effects, AncestryRepository ancestries) {
         this.characters = characters;
         this.items = items;
-        this.inventory = inventory;
-        this.aspects = aspects;
         this.talents = talents;
+        this.states = states;
+        this.ancestries = ancestries;
 
-        this.itemOperations = new ItemOperations(this.items, this.inventory);
-        this.aspectOperations = new AspectOperations(this.aspects);
+        this.itemOperations = new ItemOperations(this.items, inventory);
+        this.aspectOperations = new AspectOperations(aspects);
+        this.stateOperations = new StateOperations(effects, talents, characters);
     }
 
     //creates/finds characters
     //if Id provided, find the character, else create a new one
     @QueryMapping
     public CharacterDAO saveCharacter(@Argument CharacterDAO characterDAO) {
-
+        
         System.out.println(characterDAO);
 
         checkProficiencyChange(characterDAO);
+
+        characterDAO.getCharacterState().setCharacterId(characterDAO.getCharacter().getId());
+
+        CharacterState characterState = states.save(characterDAO.getCharacterState());
 
         CharacterObject savedCharacter = characters.save(characterDAO.getCharacter());
         itemOperations.saveUpdateItems(characterDAO.getInventory(), savedCharacter.getId());
 
         List<InventoryDAO> inventoryDAOs = itemOperations.createInventoryDAOList(savedCharacter.getId());
 
-        return new CharacterDAO(inventoryDAOs, savedCharacter);
+        return new CharacterDAO(inventoryDAOs, savedCharacter, characterState);
     }
 
     //See Tin
@@ -77,7 +90,8 @@ public class CharacterController {
     public CharacterDAO characterById(@Argument String characterId) {
         CharacterObject character = characters.findById(characterId).orElseThrow();
         List<InventoryDAO> inventoryDAOs = itemOperations.createInventoryDAOList(character.getId());
-        return new CharacterDAO(inventoryDAOs, character);
+        CharacterState characterState = states.findByCharacterId(characterId).orElse(new CharacterState());
+        return new CharacterDAO(inventoryDAOs, character, characterState);
     }
 
     //gets all of the data needed to read the character sheet.
@@ -85,12 +99,16 @@ public class CharacterController {
     public CharacterDAO fullCharacterById(@Argument String characterId) {
         CharacterObject character = characters.findById(characterId).orElseThrow();
         List<InventoryDAO> inventoryDAOs = itemOperations.createInventoryDAOList(character.getId());
+        
         List<Aspect> charAspects = aspectOperations.getAspectsFromTalentAndFlags(character);
         List<Talent> charTalents = new ArrayList<>();
-        charTalents.add(talents.findByName(character.getTalent1()));
-        charTalents.add(talents.findByName(character.getTalent2()));
+        charTalents.add(talents.findByName(character.getTalent1()).orElseThrow());
+        charTalents.add(talents.findByName(character.getTalent2()).orElseThrow());
+
         List<ProficiencyDAO> proficiencies = itemOperations.getProficiencyNames(character.getProficiencies());
-        return new CharacterDAO(inventoryDAOs, character, charAspects, charTalents, proficiencies);
+        CharacterState characterState = states.findByCharacterId(characterId).orElse(new CharacterState());
+        CalculatedState calculatedState = stateOperations.calculateState(characterState, character);
+        return new CharacterDAO(inventoryDAOs, character, charAspects, charTalents, proficiencies, characterState, calculatedState);
     }
 
     public void checkProficiencyChange(CharacterDAO characterDAO) {
@@ -141,5 +159,10 @@ public class CharacterController {
                     characterDAO.setInventory(characterInventory);
                 }
         }
+    }
+    
+    @QueryMapping
+    public List<Ancestry> getAncestryList(){
+        return ancestries.findAll();
     }
 }
