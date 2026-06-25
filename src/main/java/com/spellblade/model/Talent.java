@@ -11,16 +11,16 @@ public class Talent {
 
     @Id private String id;
     private String name;
-    private String abilities;
+    private String ability1;
+    private String ability2;
     private String description;
     private int hpBonus;
     private String prioritySkills;
     private String role;
     private int complexity;
+    private boolean caster;
     private String keystone;
     private String capstone;
-    private String effectId;
-    private String keystoneEffectId;
     
     public Talent(){}
 

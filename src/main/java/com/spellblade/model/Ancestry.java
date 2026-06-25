@@ -5,13 +5,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
 
-@Document("ANCESTRY")
+@Document("ANCESTRIES")
 @Data
 public class Ancestry {
 
     @Id private String id;
     private String name;
-    private String description;
+    private String source;
+    private String trait;
+    private String size;
     
     public Ancestry(){}
 }

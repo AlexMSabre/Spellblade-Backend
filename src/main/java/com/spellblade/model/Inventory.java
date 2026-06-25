@@ -13,15 +13,13 @@ public class Inventory {
     private String itemId;
     private String characterId;
     private boolean equipped;
-    private int proficiency;
     private int quantity;
     
     public Inventory(){}
 
-    public Inventory(String itemId, String characterId, int proficiency, int quantity){
+    public Inventory(String itemId, String characterId, int quantity){
         this.itemId = itemId;
         this.characterId = characterId;
-        this.proficiency = proficiency;
         this.quantity = quantity;
     }
 }

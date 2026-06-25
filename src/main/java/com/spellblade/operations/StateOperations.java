@@ -49,7 +49,7 @@ public class StateOperations {
 
         int mpTalents = talent1.getRole().contains("Spellcaster") ? 4 : 0;
         mpTalents += talent2.getRole().contains("Spellcaster") ? 4 : 0;
-        result.setManaMax(2 + (2 * result.getFocus()) + mpTalents + getAspectLevel(character.getAspects1(), character.getAspects2()));
+        result.setManaMax(2 + (2 * result.getFocus()) + mpTalents + getAttributeLevel(character.getAttribute1(), character.getAttribute2()));
         
         result.setEvasion(10 + (int) Math.ceil(0.5 * result.getFitness()) + (int) Math.ceil(0.5 * result.getSense()));
         result.setHexResist(10 + (int) Math.ceil(0.5 * result.getFocus()) + (int) Math.ceil(0.5 * result.getFitness()));
@@ -110,21 +110,23 @@ public class StateOperations {
 
     //recalculates state incase of equip
     public CharacterDAO calculateState(String effectName, CharacterState state) {
-        Effect newEffect = effects.findByName(effectName);
-        String conditionalCheck = newEffect != null ? newEffect.getConditionalCheck() : null;
-        String effectString = state.getActiveEffects();
-        if(effectString.contains(effectName)){
-            state.setActiveEffects(String.join("", effectString.split(effectName)));
-        } else if(conditionalCheck != null && !conditionalCheck.equals("")){
-            List<Effect> activeEffects = getActiveEffectsFromState(state);
-            boolean isMet = activeEffects.stream().filter((e)->e.getCharProperty().equalsIgnoreCase(conditionalCheck)).count() > 0;
-            if (isMet) {
+        if(effectName!= null){
+            Effect newEffect = effects.findByName(effectName);
+            String conditionalCheck = newEffect != null ? newEffect.getConditionalCheck() : null;
+            String effectString = state.getActiveEffects();
+            if(effectString.contains(effectName)){
+                state.setActiveEffects(String.join("", effectString.split(effectName)));
+            } else if(conditionalCheck != null && !conditionalCheck.equals("")){
+                List<Effect> activeEffects = getActiveEffectsFromState(state);
+                boolean isMet = activeEffects.stream().filter((e)->e.getCharProperty().equalsIgnoreCase(conditionalCheck)).count() > 0;
+                if (isMet) {
+                    effectString += effectString.length() >0 ? "," : "";
+                    state.setActiveEffects(effectString + effectName);
+                }
+            } else {
                 effectString += effectString.length() >0 ? "," : "";
                 state.setActiveEffects(effectString + effectName);
             }
-        } else {
-            effectString += effectString.length() >0 ? "," : "";
-            state.setActiveEffects(effectString + effectName);
         }
         CharacterObject character = characters.findById(state.getCharacterId()).orElseThrow();
         CharacterDAO result = new CharacterDAO();
@@ -147,13 +149,13 @@ public class StateOperations {
         return result.split(",");
     }
 
-    public int getAspectLevel(int aspect1, int aspect2) {
+    public int getAttributeLevel(int attribute1, int attribute2) {
         int total = 0;
-        while (aspect1 > 0 || aspect2 > 0) {
-            total += aspect1 & 1;
-            total += aspect2 & 1;
-            aspect1 >>= 1;
-            aspect2 >>= 1;
+        while (attribute1 > 0 || attribute2 > 0) {
+            total += attribute1 & 1;
+            total += attribute2 & 1;
+            attribute1 >>= 1;
+            attribute2 >>= 1;
         }
         return total;
     }

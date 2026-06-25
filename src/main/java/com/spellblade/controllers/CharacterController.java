@@ -8,7 +8,7 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import com.spellblade.model.Ancestry;
-import com.spellblade.model.Aspect;
+import com.spellblade.model.Attribute;
 import com.spellblade.model.CalculatedState;
 import com.spellblade.model.CharacterObject;
 import com.spellblade.model.CharacterState;
@@ -18,11 +18,11 @@ import com.spellblade.model.Talent;
 import com.spellblade.model.dao.CharacterDAO;
 import com.spellblade.model.dao.InventoryDAO;
 import com.spellblade.model.dao.ProficiencyDAO;
-import com.spellblade.operations.AspectOperations;
+import com.spellblade.operations.AttributeOperations;
 import com.spellblade.operations.ItemOperations;
 import com.spellblade.operations.StateOperations;
 import com.spellblade.repository.AncestryRepository;
-import com.spellblade.repository.AspectLkpRepository;
+import com.spellblade.repository.AttributeLkpRepository;
 import com.spellblade.repository.CharacterObjectRepository;
 import com.spellblade.repository.CharacterStateRepository;
 import com.spellblade.repository.EffectRepository;
@@ -40,12 +40,12 @@ public class CharacterController {
     private final CharacterStateRepository states;
 
     private final ItemOperations itemOperations;
-    private final AspectOperations aspectOperations;
+    private final AttributeOperations attributeOperations;
     private final StateOperations stateOperations;
     private final AncestryRepository ancestries;
 
     public CharacterController(CharacterObjectRepository characters, ItemLkpRepository items, 
-        InventoryRepository inventory, AspectLkpRepository aspects, TalentLkpRepository talents,
+        InventoryRepository inventory, AttributeLkpRepository attribute, TalentLkpRepository talents,
         CharacterStateRepository states, EffectRepository effects, AncestryRepository ancestries) {
         this.characters = characters;
         this.items = items;
@@ -54,7 +54,7 @@ public class CharacterController {
         this.ancestries = ancestries;
 
         this.itemOperations = new ItemOperations(this.items, inventory);
-        this.aspectOperations = new AspectOperations(aspects);
+        this.attributeOperations = new AttributeOperations(attribute);
         this.stateOperations = new StateOperations(effects, talents, characters);
     }
 
@@ -100,7 +100,7 @@ public class CharacterController {
         CharacterObject character = characters.findById(characterId).orElseThrow();
         List<InventoryDAO> inventoryDAOs = itemOperations.createInventoryDAOList(character.getId());
         
-        List<Aspect> charAspects = aspectOperations.getAspectsFromTalentAndFlags(character);
+        List<Attribute> charAttribute = attributeOperations.getAttributeFromTalentAndFlags(character);
         List<Talent> charTalents = new ArrayList<>();
         charTalents.add(talents.findByName(character.getTalent1()).orElseThrow());
         charTalents.add(talents.findByName(character.getTalent2()).orElseThrow());
@@ -108,7 +108,7 @@ public class CharacterController {
         List<ProficiencyDAO> proficiencies = itemOperations.getProficiencyNames(character.getProficiencies());
         CharacterState characterState = states.findByCharacterId(characterId).orElse(new CharacterState());
         CalculatedState calculatedState = stateOperations.calculateState(characterState, character);
-        return new CharacterDAO(inventoryDAOs, character, charAspects, charTalents, proficiencies, characterState, calculatedState);
+        return new CharacterDAO(inventoryDAOs, character, charAttribute, charTalents, proficiencies, characterState, calculatedState);
     }
 
     public void checkProficiencyChange(CharacterDAO characterDAO) {

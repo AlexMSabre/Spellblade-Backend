@@ -16,13 +16,13 @@ public class CharacterObject {
 	@Id private String id;
     private String userId;
 	private String name;
-	private int aspectLevel;
+	private int attributeLevel;
     private String talent1;
     private String talent2;
-    private int aspects1;
-    private int aspects2;
+    private int attribute1;
+    private int attribute2;
     private String ancestryName;
-    private String ancestryTrait;
+    private String ancestryTraits;
     private int baseFitness;
     private int baseTechnique;
     private int baseFocus;

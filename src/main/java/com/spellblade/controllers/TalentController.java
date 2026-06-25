@@ -9,29 +9,29 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import com.spellblade.model.Aspect;
+import com.spellblade.model.Attribute;
 import com.spellblade.model.Talent;
 import com.spellblade.model.dao.TalentDAO;
-import com.spellblade.operations.AspectOperations;
-import com.spellblade.repository.AspectLkpRepository;
+import com.spellblade.operations.AttributeOperations;
+import com.spellblade.repository.AttributeLkpRepository;
 import com.spellblade.repository.TalentLkpRepository;
 
 //the endpoints for everything related to characters
 @Controller
 public class TalentController {
 
-    private final AspectLkpRepository aspects;
+    private final AttributeLkpRepository attribute;
     private final TalentLkpRepository talents;
-    private final AspectOperations aspectOperations;
+    private final AttributeOperations attributeOperations;
 
-    public TalentController(AspectLkpRepository aspects, TalentLkpRepository talents){
+    public TalentController(AttributeLkpRepository attribute, TalentLkpRepository talents){
         this.talents = talents;
-        this.aspects = aspects;
-        this.aspectOperations = new AspectOperations(aspects);
+        this.attribute = attribute;
+        this.attributeOperations = new AttributeOperations(attribute);
     }
 
     @QueryMapping
-    public List<TalentDAO> getTalentAndAspectsData(@Argument String talent1Name, @Argument String talent2Name){
+    public List<TalentDAO> getTalentAndAttributeData(@Argument String talent1Name, @Argument String talent2Name){
         List<TalentDAO> results = new ArrayList<>();
         results.add(getTalentData(talent1Name));
         results.add(getTalentData(talent2Name));
@@ -41,9 +41,9 @@ public class TalentController {
     private TalentDAO getTalentData(String talentName) {
         TalentDAO result = new TalentDAO();
         result.setTalent(talents.findByName(talentName).orElse(new Talent()));
-        List<Aspect> aspectList = aspects.findByTalentName(talentName);
-        Collections.sort(aspectList, (Aspect i1, Aspect i2) -> i1.getFlag() - i2.getFlag());
-        result.setAspects(aspectList);
+        List<Attribute> attributeList = attribute.findByTalentName(talentName);
+        Collections.sort(attributeList, (Attribute i1, Attribute i2) -> i1.getFlag() - i2.getFlag());
+        result.setAttributes(attributeList);
         return result;
     }
 

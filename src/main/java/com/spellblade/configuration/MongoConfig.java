@@ -13,12 +13,12 @@ public class MongoConfig {
     @Bean
     public MongoClient mongoClient() {
         //MongoDB connection string here
-        return MongoClients.create("mongodb://localhost:27017"); 
+        return MongoClients.create("mongodb+srv://spellbladettrpg_db_user:vxZraFARoiYTnPxx@spellblade0.hs5zsn5.mongodb.net/?appName=Spellblade0"); 
     }
 
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
         // Specify the default database name
-        return new MongoTemplate(mongoClient(), "Spellblade");
+        return new MongoTemplate(mongoClient(), "SPELLBLADE_DEV");
     }
 }

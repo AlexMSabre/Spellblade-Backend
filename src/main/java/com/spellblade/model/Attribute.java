@@ -5,9 +5,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
 
-@Document("ASPECTS")
+@Document("ATTRIBUTE_LKP")
 @Data
-public class Aspect {
+public class Attribute {
 
     @Id private String id;
     private String name;
@@ -15,5 +15,5 @@ public class Aspect {
     private int flag;
     private String description;
     
-    public Aspect(){}
+    public Attribute(){}
 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.spellblade.model.Inventory;
-import com.spellblade.model.dao.InventoryDAO;
 import com.spellblade.model.Item;
+import com.spellblade.model.dao.InventoryDAO;
 import com.spellblade.model.dao.ProficiencyDAO;
 import com.spellblade.repository.InventoryRepository;
 import com.spellblade.repository.ItemLkpRepository;
@@ -84,11 +84,11 @@ public class ItemOperations{
         //if it does, make an entry for the weapon and another for the ammo
         List<Inventory> result = new ArrayList<>();
         if(!hasAmmo)
-            result.add(new Inventory(item.getId(), characterId, 1, quantity));
+            result.add(new Inventory(item.getId(), characterId, quantity));
         else {
             Item ammo = items.findByName(item.getItemType().split(" ")[1]);
-            result.add(new Inventory(item.getId(), characterId, 1, 1));
-            result.add(new Inventory(ammo.getId(), characterId, 1, quantity));
+            result.add(new Inventory(item.getId(), characterId, 1));
+            result.add(new Inventory(ammo.getId(), characterId, quantity));
         }
         return result;
     }

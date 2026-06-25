@@ -11,7 +11,7 @@ type Query {
     getTalentsList: [String]
     getAncestryList: [Ancestry]
     getProficiencyNames(proficiencies: String): [ProficiencyDAO]
-    getTalentAndAspectsData(talent1Name: String, talent2Name: String): [TalentDAO]
+    getTalentAndAttributeData(talent1Name: String, talent2Name: String): [TalentDAO]
     calculateState(state: inputCharacterState, character: inputCharacterObject): CalculatedState
     getCharacterStateById(id: String): CharacterState
     addEffect(effectName: String, state: inputCharacterState): CharacterDAO
@@ -21,9 +21,9 @@ type CharacterObject {
     id: String
     userId: String
     name: String
-    aspectLevel: Int
-    aspects1: Int
-    aspects2: Int
+    attributeLevel: Int
+    attribute1: Int
+    attribute2: Int
     talent1: String
     talent2: String
     size: String
@@ -40,9 +40,9 @@ input inputCharacterObject {
     id: String
     userId: String
     name: String
-    aspectLevel: Int
-    aspects1: Int
-    aspects2: Int
+    attributeLevel: Int
+    attribute1: Int
+    attribute2: Int
     talent1: String
     talent2: String
     size: String
@@ -120,7 +120,6 @@ input inputInventory {
     characterId: String
     itemId: String
     equipped: Boolean
-    proficiency: Int
     quantity: Int
 }
 
@@ -132,12 +131,10 @@ type Item {
     equippable: Boolean
     size: String
     weight: Float
-    description1: String
-    description2: String
-    description3: String
+    description: String
+    properties: String
     attack1String: String
     attack2String: String
-    attack3String: String
     effectName: String
     baseCost: Int
     rarity: String
@@ -151,12 +148,10 @@ input inputItem {
     equippable: Boolean
     size: String
     weight: Float
-    description1: String
-    description2: String
-    description3: String
+    description: String
+    properties: String
     attack1String: String
     attack2String: String
-    attack3String: String
     effectName: String
     baseCost: Int
     rarity: String
@@ -172,7 +167,7 @@ type Effect {
     effect: String
 }
 
-type Aspect {
+type Attribute {
     id: String
     name: String
     talentName: String
@@ -183,13 +178,16 @@ type Aspect {
 type Ancestry {
     id: String
     name: String
-    description: String
+    source: String
+    trait: String
+    size: String
 }
 
 type Talent {
     id: String
     name: String
-    abilities: String
+    ability1: String
+    ability2: String
     description: String
     hpBonus: Int
     prioritySkills: String
@@ -197,14 +195,13 @@ type Talent {
     complexity: Int
     keystone: String
     capstone: String
-    effectId: String
-    keystoneEffectId: String
+    caster: Boolean
 }
 
 type CharacterDAO {
     inventory: [InventoryDAO]
     character: CharacterObject
-    aspects: [Aspect]
+    attributes: [Attribute]
     talents: [Talent]
     proficiencies: [ProficiencyDAO]
     characterState: CharacterState
@@ -224,5 +221,5 @@ type ProficiencyDAO {
 
 type TalentDAO { 
     talent: Talent
-    aspects: [Aspect]
+    attributes: [Attribute]
 }

@@ -2,8 +2,7 @@ package com.spellblade.model.dao;
 
 import java.util.List;
 
-import com.spellblade.model.Aspect;
-import com.spellblade.model.Item;
+import com.spellblade.model.Attribute;
 import com.spellblade.model.Talent;
 
 import lombok.Data;
@@ -12,13 +11,13 @@ import lombok.Data;
 public class TalentDAO {
 
     private Talent talent;
-    private List<Aspect> aspects;
+    private List<Attribute> attributes;
 
     public TalentDAO() {}
 
-    public TalentDAO(Talent talent, List<Aspect> aspects){
+    public TalentDAO(Talent talent, List<Attribute> attribute){
         this.talent = talent;
-        this.aspects = aspects;
+        this.attributes = attribute;
     }
 
 }

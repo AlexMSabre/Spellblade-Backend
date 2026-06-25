@@ -16,12 +16,10 @@ public class Item {
     private boolean equippable;
     private String size;
     private double weight;
-    private String description1;
-    private String description2;
-    private String description3;
+    private String description;
+    private String properties;
     private String attack1String;
     private String attack2String;
-    private String attack3String; 
     private String effectName;
     private int baseCost;
     private String rarity;

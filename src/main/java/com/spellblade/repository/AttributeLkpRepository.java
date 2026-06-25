@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.spellblade.model.Aspect;
+import com.spellblade.model.Attribute;
 
 
 //The Repository object for the Items
@@ -13,7 +13,7 @@ import com.spellblade.model.Aspect;
 //(see: https://docs.spring.io/spring-data/mongodb/reference/repositories/query-methods-details.html)
 
 
-public interface AspectLkpRepository extends MongoRepository<Aspect, String> {  
-    List<Aspect> findByTalentName(String name);
-    Aspect findByTalentNameAndFlag(String name, int flag);
+public interface AttributeLkpRepository extends MongoRepository<Attribute, String> {  
+    List<Attribute> findByTalentName(String name);
+    Attribute findByTalentNameAndFlag(String name, int flag);
 }
