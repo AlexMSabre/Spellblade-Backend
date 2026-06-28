@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
 
-@Document("ANCESTRIES")
+@Document("ANCESTRY")
 @Data
 public class Ancestry {
 
