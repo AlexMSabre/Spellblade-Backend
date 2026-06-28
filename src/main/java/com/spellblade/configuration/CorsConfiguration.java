@@ -11,7 +11,7 @@ public class CorsConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Apply to all API paths
-                .allowedOrigins("http://localhost:3000", "104.139.185.123:3000", "https://main.dgyamk5jkumb2.amplifyapp.com:3000")
+                .allowedOrigins("http://localhost:3000", "104.139.185.123:3000", "main.dgyamk5jkumb2.amplifyapp.com:3000")
                 .allowedMethods("GET", "POST")
                 .allowedHeaders("*")
                 .allowCredentials(true)
