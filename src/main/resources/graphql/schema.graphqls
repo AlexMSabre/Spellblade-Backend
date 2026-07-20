@@ -30,7 +30,7 @@ type CharacterObject {
     ancestryTrait: String
     ancestryName: String
     baseFitness: Int
-    baseTechnique: Int
+    basePrecision: Int
     baseFocus: Int
     baseSense: Int
     proficiencies: String
@@ -49,7 +49,7 @@ input inputCharacterObject {
     ancestryTrait: String
     ancestryName: String
     baseFitness: Int
-    baseTechnique: Int
+    basePrecision: Int
     baseFocus: Int
     baseSense: Int
     proficiencies: String
@@ -86,12 +86,17 @@ type CalculatedState {
     wounds: Int
     manaMax: Int
     manaPoints: Int
+    spellCapacity: Int
+    dexterity: Int
+    celerity: Int
+    awareness: Int
+    subtlety: Int
     evasion: Int
-    hexResist: Int
+    tenacity: Int
     movement: Int
     encumbrance: Int
     fitness: Int
-    technique: Int
+    precision: Int
     focus: Int
     sense: Int
 }

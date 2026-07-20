@@ -18,12 +18,17 @@ public class CalculatedState {
     private int wounds;
     private int manaMax;
     private int manaPoints;
+    private int spellCapacity;
+    private int dexterity;
+    private int celerity;
+    private int subtlety;
+    private int awareness;
     private int evasion;
-    private int hexResist;
+    private int tenacity;
     private int movement;
     private int encumbrance;
     private int fitness;
-    private int technique;
+    private int precision;
     private int focus;
     private int sense;
 
@@ -31,15 +36,15 @@ public class CalculatedState {
         
     }
 
-    public CalculatedState(CharacterObject character, CharacterState state){
+    public CalculatedState(CharacterObject character, CharacterState state, int MOVEBASE){
         setFitness(character.getBaseFitness());
-        setTechnique(character.getBaseTechnique());
+        setPrecision(character.getBasePrecision());
         setFocus(character.getBaseFocus());
         setSense(character.getBaseSense());
         setHitPoints(state.getHitPoints());
         setManaPoints(state.getManaPoints());
         setArmor(state.getArmor());
-        setMovement(6);
+        setMovement(MOVEBASE);
     }
 
 }

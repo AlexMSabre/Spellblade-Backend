@@ -24,7 +24,7 @@ public class CharacterObject {
     private String ancestryName;
     private String ancestryTraits;
     private int baseFitness;
-    private int baseTechnique;
+    private int basePrecision;
     private int baseFocus;
     private int baseSense;
     private String size;

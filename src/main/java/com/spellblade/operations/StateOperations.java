@@ -32,11 +32,24 @@ public class StateOperations {
         this.characters = characters;
     }
 
+    private final static int HPBASE = 30;
+    private final static int MOVEBASE = 2;
+    private final static int MANABASE = 3;
+    private final static int MANAFOCUSMULT = 2;
+    private final static int TALENTMANA = 3;
+    private final static int SPELLCAPBASE = 2;
+    private final static double ABILITYMULT = 0.5;
+    private final static int SKILLMIN = 0;
+    private final static int SKILLMAX = 6;
+    private final static int BASEENCUMB = 50;
+    private final static int ENCUMBFITMULT = 10;
+    private final static int WOUNDBASE = 4;
+
     public CalculatedState calculateState(CharacterState state, CharacterObject character) {
 
         List<Effect> effectList = getActiveEffectsFromState(state);
         effectList = effectList.stream().filter(e->e != null).collect(Collectors.toList());
-        CalculatedState result = new CalculatedState(character, state);
+        CalculatedState result = new CalculatedState(character, state, MOVEBASE);
         List<Long> filters = new ArrayList<>();
         filters.add(-1L);
         filters.add(0L);
@@ -45,29 +58,27 @@ public class StateOperations {
         //do mid-level calculations here
         Talent talent1 = talents.findByName(character.getTalent1()).orElse(new Talent(""));
         Talent talent2 = talents.findByName(character.getTalent2()).orElse(new Talent(""));
-        result.setHitPointsMax(40 + talent1.getHpBonus() + talent2.getHpBonus());
+        result.setHitPointsMax(HPBASE + talent1.getHpBonus() + talent2.getHpBonus());
 
-        int mpTalents = talent1.getRole().contains("Spellcaster") ? 4 : 0;
-        mpTalents += talent2.getRole().contains("Spellcaster") ? 4 : 0;
-        result.setManaMax(2 + (2 * result.getFocus()) + mpTalents + getAttributeLevel(character.getAttribute1(), character.getAttribute2()));
+        int mpTalents = talent1.isCaster() ? TALENTMANA : 0;
+        mpTalents += talent2.isCaster() ? TALENTMANA : 0;
+        int level = getAttributeLevel(character.getAttribute1(), character.getAttribute2());
+        result.setManaMax(MANABASE + (MANAFOCUSMULT * result.getFocus()) + mpTalents + level);
         
-        result.setEvasion(10 + (int) Math.ceil(0.5 * result.getFitness()) + (int) Math.ceil(0.5 * result.getSense()));
-        result.setHexResist(10 + (int) Math.ceil(0.5 * result.getFocus()) + (int) Math.ceil(0.5 * result.getFitness()));
+        result.setDexterity((int) Math.ceil(ABILITYMULT * (result.getPrecision() + result.getFitness())));
+        result.setCelerity((int) Math.ceil(ABILITYMULT * (result.getFocus() + result.getPrecision())));
+        result.setSubtlety((int) Math.ceil(ABILITYMULT * (result.getSense() + result.getPrecision())));
+        result.setAwareness((int) Math.ceil(ABILITYMULT * (result.getSense() + result.getFocus())));
+        result.setEvasion((int) Math.ceil(ABILITYMULT * (result.getSense() + result.getFitness())));
+        result.setTenacity((int) Math.ceil(ABILITYMULT * (result.getFocus() + result.getFitness())));
         
-        result.setEncumbrance(50 + (10 * result.getFitness()));
+        result.setEncumbrance(BASEENCUMB + (ENCUMBFITMULT * result.getFitness()));
+        result.setSpellCapacity(SPELLCAPBASE + (mpTalents/TALENTMANA) + level + result.getFocus());
 
         String[] applying = concatenateEffects(effectList, filters);
         applyEffects(result, applying);
 
-        //TODO: Wound counting
-        int wounds = 6;
-        switch(character.getSize()){
-            case "Tiny" -> wounds = 4;
-            case "Small" -> wounds = 5;
-            case "Large" -> wounds = 8;
-            case "Huge" -> wounds = 14;
-        }
-        result.setWoundsMax(wounds);
+        result.setWoundsMax(WOUNDBASE + result.getTenacity());
 
         result.setWounds((int)effectList.stream().filter(e-> e.getDescription().equals("Wound")).count());
 
@@ -108,7 +119,7 @@ public class StateOperations {
         }
     }
 
-    //recalculates state incase of equip
+    //recalculates state in case of equip
     public CharacterDAO calculateState(String effectName, CharacterState state) {
         if(effectName!= null){
             Effect newEffect = effects.findByName(effectName);
