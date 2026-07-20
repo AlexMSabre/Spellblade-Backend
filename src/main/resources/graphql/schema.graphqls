@@ -82,8 +82,6 @@ type CalculatedState {
     armorMax: Int
     armorMin: Int
     armor: Int
-    woundsMax: Int
-    wounds: Int
     manaMax: Int
     manaPoints: Int
     spellCapacity: Int
@@ -93,12 +91,14 @@ type CalculatedState {
     subtlety: Int
     evasion: Int
     tenacity: Int
-    movement: Int
     encumbrance: Int
     fitness: Int
     precision: Int
     focus: Int
     sense: Int
+    woundsMax: Int
+    wounds: Int
+    movement: Int
 }
 
 type InventoryDAO {
