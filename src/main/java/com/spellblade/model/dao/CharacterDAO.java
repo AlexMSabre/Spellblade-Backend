@@ -6,6 +6,7 @@ import com.spellblade.model.Attribute;
 import com.spellblade.model.CalculatedState;
 import com.spellblade.model.CharacterObject;
 import com.spellblade.model.CharacterState;
+import com.spellblade.model.SpellCharacter;
 import com.spellblade.model.Talent;
 
 import lombok.Data;
@@ -20,6 +21,7 @@ public class CharacterDAO {
     private List<ProficiencyDAO> proficiencies;
     private CharacterState characterState;
     private CalculatedState calculatedState;
+    private List<SpellCharacter> spells;
 
     public CharacterDAO() {}
 
@@ -35,7 +37,7 @@ public class CharacterDAO {
 
     public CharacterDAO(List<InventoryDAO> inventory, CharacterObject character,
          List<Attribute> attributes, List<Talent> talents, List<ProficiencyDAO> proficiencies,
-         CharacterState characterState, CalculatedState calculatedState){
+         CharacterState characterState, CalculatedState calculatedState, List<SpellCharacter> spells){
         this.inventory = inventory;
         this.character = character;
         this.attributes = attributes;
@@ -43,6 +45,7 @@ public class CharacterDAO {
         this.proficiencies = proficiencies;
         this.characterState = characterState;
         this.calculatedState = calculatedState; 
+        this.spells = spells;
     }
 
 }

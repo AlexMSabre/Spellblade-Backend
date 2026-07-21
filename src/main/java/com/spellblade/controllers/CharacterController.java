@@ -3,6 +3,7 @@ package com.spellblade.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import com.spellblade.model.CharacterObject;
 import com.spellblade.model.CharacterState;
 import com.spellblade.model.Inventory;
 import com.spellblade.model.Item;
+import com.spellblade.model.SpellCharacter;
 import com.spellblade.model.Talent;
 import com.spellblade.model.dao.CharacterDAO;
 import com.spellblade.model.dao.InventoryDAO;
@@ -28,6 +30,7 @@ import com.spellblade.repository.CharacterStateRepository;
 import com.spellblade.repository.EffectRepository;
 import com.spellblade.repository.InventoryRepository;
 import com.spellblade.repository.ItemLkpRepository;
+import com.spellblade.repository.SpellCharacterRepository;
 import com.spellblade.repository.TalentLkpRepository; 
 
 //the endpoints for everything related to characters
@@ -43,6 +46,9 @@ public class CharacterController {
     private final AttributeOperations attributeOperations;
     private final StateOperations stateOperations;
     private final AncestryRepository ancestries;
+
+    @Autowired
+    private SpellCharacterRepository spellCharacters;
 
     public CharacterController(CharacterObjectRepository characters, ItemLkpRepository items, 
         InventoryRepository inventory, AttributeLkpRepository attribute, TalentLkpRepository talents,
@@ -76,6 +82,8 @@ public class CharacterController {
 
         List<InventoryDAO> inventoryDAOs = itemOperations.createInventoryDAOList(savedCharacter.getId());
 
+        spellCharacters.saveAll(characterDAO.getSpells());
+
         return new CharacterDAO(inventoryDAOs, savedCharacter, characterState);
     }
 
@@ -108,7 +116,9 @@ public class CharacterController {
         List<ProficiencyDAO> proficiencies = itemOperations.getProficiencyNames(character.getProficiencies());
         CharacterState characterState = states.findByCharacterId(characterId).orElse(new CharacterState());
         CalculatedState calculatedState = stateOperations.calculateState(characterState, character);
-        return new CharacterDAO(inventoryDAOs, character, charAttribute, charTalents, proficiencies, characterState, calculatedState);
+
+        List<SpellCharacter> spells = spellCharacters.findByCharacterId(characterId);
+        return new CharacterDAO(inventoryDAOs, character, charAttribute, charTalents, proficiencies, characterState, calculatedState, spells);
     }
 
     public void checkProficiencyChange(CharacterDAO characterDAO) {

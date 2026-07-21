@@ -15,6 +15,7 @@ type Query {
     calculateState(state: inputCharacterState, character: inputCharacterObject): CalculatedState
     getCharacterStateById(id: String): CharacterState
     addEffect(effectName: String, state: inputCharacterState): CharacterDAO
+    getAllSpells: [Spell]
 }
 
 type CharacterObject {
@@ -109,6 +110,34 @@ type InventoryDAO {
 input inputInventoryDAO {
     inventory: inputInventory
     item: inputItem
+}
+
+type Spell {
+    id: String
+    name: String
+    spellType: String
+    source: String
+    actionCost: String
+    manaCost: Int
+    range: String
+    duration: String
+    description: String
+    effectAmount: String
+    effectConditional: String
+    effectType: String
+    tags: String
+}
+
+type SpellCharacter {
+    id: String
+    characterId: String
+    spellId: String
+}
+
+input inputSpellCharacter {
+    id: String
+    characterId: String
+    spellId: String
 }
 
 type Inventory {
@@ -211,12 +240,14 @@ type CharacterDAO {
     proficiencies: [ProficiencyDAO]
     characterState: CharacterState
     calculatedState: CalculatedState
+    spells: [SpellCharacter]
 }
 
 input inputCharacterDAO {
     inventory: [inputInventoryDAO]
     character: inputCharacterObject
     characterState: inputCharacterState
+    spells: [inputSpellCharacter]
 }
 
 type ProficiencyDAO {
