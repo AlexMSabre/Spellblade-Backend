@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
@@ -20,15 +21,11 @@ import com.spellblade.repository.TalentLkpRepository;
 @Controller
 public class TalentController {
 
-    private final AttributeLkpRepository attribute;
-    private final TalentLkpRepository talents;
-    private final AttributeOperations attributeOperations;
-
-    public TalentController(AttributeLkpRepository attribute, TalentLkpRepository talents){
-        this.talents = talents;
-        this.attribute = attribute;
-        this.attributeOperations = new AttributeOperations(attribute);
-    }
+    @Autowired
+    private AttributeLkpRepository attribute;
+    @Autowired
+    private TalentLkpRepository talents;
+    private AttributeOperations attributeOperations;
 
     @QueryMapping
     public List<TalentDAO> getTalentAndAttributeData(@Argument String talent1Name, @Argument String talent2Name){

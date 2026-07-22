@@ -16,7 +16,7 @@ public class ItemOperations{
     private final ItemLkpRepository items;
     private final InventoryRepository inventory;
 
-    public ItemOperations(ItemLkpRepository items, InventoryRepository inventory){
+    public ItemOperations(ItemLkpRepository items, InventoryRepository inventory ){
         this.items = items;
         this.inventory = inventory;
     }

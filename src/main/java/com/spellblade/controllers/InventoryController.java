@@ -3,13 +3,14 @@ package com.spellblade.controllers;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import com.spellblade.model.Inventory;
-import com.spellblade.model.dao.InventoryDAO;
 import com.spellblade.model.Item;
+import com.spellblade.model.dao.InventoryDAO;
 import com.spellblade.operations.ItemOperations;
 import com.spellblade.repository.InventoryRepository;
 import com.spellblade.repository.ItemLkpRepository;
@@ -18,13 +19,13 @@ import com.spellblade.repository.ItemLkpRepository;
 @Controller
 public class InventoryController {
 
-    private final ItemLkpRepository items;
-    private final InventoryRepository inventory;
+    @Autowired
+    private ItemLkpRepository items;
+    @Autowired
+    private InventoryRepository inventory;
     private final ItemOperations itemOperations;
 
-    public InventoryController(ItemLkpRepository items, InventoryRepository inventory){
-        this.items = items;
-        this.inventory = inventory;
+    public InventoryController(){
         this.itemOperations = new ItemOperations(items, inventory);
     }
 

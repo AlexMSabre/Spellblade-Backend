@@ -40,26 +40,25 @@ public class CharacterController {
     private final CharacterObjectRepository characters;
     private final ItemLkpRepository items;
     private final TalentLkpRepository talents;
-    private final CharacterStateRepository states;
+    @Autowired
+    private CharacterStateRepository states;
+    @Autowired
+    private AncestryRepository ancestries;
 
     private final ItemOperations itemOperations;
     private final AttributeOperations attributeOperations;
     private final StateOperations stateOperations;
-    private final AncestryRepository ancestries;
 
     @Autowired
     private SpellCharacterRepository spellCharacters;
 
-    public CharacterController(CharacterObjectRepository characters, ItemLkpRepository items, 
-        InventoryRepository inventory, AttributeLkpRepository attribute, TalentLkpRepository talents,
-        CharacterStateRepository states, EffectRepository effects, AncestryRepository ancestries) {
-        this.characters = characters;
+    public CharacterController(InventoryRepository inventory, AttributeLkpRepository attribute, EffectRepository effects, ItemLkpRepository items,
+                             TalentLkpRepository talents, CharacterObjectRepository characters){
+
         this.items = items;
         this.talents = talents;
-        this.states = states;
-        this.ancestries = ancestries;
-
-        this.itemOperations = new ItemOperations(this.items, inventory);
+        this.characters = characters;
+        this.itemOperations = new ItemOperations(items, inventory);
         this.attributeOperations = new AttributeOperations(attribute);
         this.stateOperations = new StateOperations(effects, talents, characters);
     }
@@ -82,7 +81,9 @@ public class CharacterController {
 
         List<InventoryDAO> inventoryDAOs = itemOperations.createInventoryDAOList(savedCharacter.getId());
 
-        spellCharacters.saveAll(characterDAO.getSpells());
+        if(characterDAO.getSpells() != null) {
+            spellCharacters.saveAll(characterDAO.getSpells());
+        }
 
         return new CharacterDAO(inventoryDAOs, savedCharacter, characterState);
     }

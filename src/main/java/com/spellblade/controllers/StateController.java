@@ -1,5 +1,6 @@
 package com.spellblade.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
@@ -18,11 +19,11 @@ import com.spellblade.repository.TalentLkpRepository;
 @Controller
 public class StateController {
 
-    private final CharacterStateRepository states;
+    @Autowired
+    private CharacterStateRepository states;
     private final StateOperations stateOps;
 
-    public StateController(CharacterStateRepository states, EffectRepository effects, TalentLkpRepository talents, CharacterObjectRepository characters) {
-        this.states = states;
+    public StateController(EffectRepository effects, TalentLkpRepository talents, CharacterObjectRepository characters){
         stateOps = new StateOperations(effects, talents, characters);
     }
 
