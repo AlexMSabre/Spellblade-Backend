@@ -12,24 +12,18 @@ import org.springframework.util.StringUtils;
 
 import com.spellblade.model.CalculatedState;
 import com.spellblade.model.CharacterObject;
-import com.spellblade.model.CharacterState;
 import com.spellblade.model.Effect;
 import com.spellblade.model.Talent;
 import com.spellblade.model.dao.CharacterDAO;
-import com.spellblade.repository.CharacterObjectRepository;
+import com.spellblade.model.inners.CharacterState;
 import com.spellblade.repository.EffectRepository;
-import com.spellblade.repository.TalentLkpRepository; 
 
 public class StateOperations {
 
     private final EffectRepository effects;
-    private final TalentLkpRepository talents;
-    private final CharacterObjectRepository characters;
 
-    public StateOperations(EffectRepository effects, TalentLkpRepository talents, CharacterObjectRepository characters) {
+    public StateOperations(EffectRepository effects) {
         this.effects = effects;
-        this.talents = talents;
-        this.characters = characters;
     }
 
     private final static int HPBASE = 30;
@@ -39,30 +33,28 @@ public class StateOperations {
     private final static int TALENTMANA = 3;
     private final static int SPELLCAPBASE = 2;
     private final static double ABILITYMULT = 0.5;
-    private final static int SKILLMIN = 0;
-    private final static int SKILLMAX = 6;
     private final static int BASEENCUMB = 50;
     private final static int ENCUMBFITMULT = 10;
     private final static int WOUNDBASE = 4;
 
-    public CalculatedState calculateState(CharacterState state, CharacterObject character) {
+    public CalculatedState calculateState(CharacterObject character) {
 
-        List<Effect> effectList = getActiveEffectsFromState(state);
+        List<Effect> effectList = getActiveEffectsFromState(character.getState());
         effectList = effectList.stream().filter(e->e != null).collect(Collectors.toList());
-        CalculatedState result = new CalculatedState(character, state, MOVEBASE);
+        CalculatedState result = new CalculatedState(character, MOVEBASE);
         List<Long> filters = new ArrayList<>();
         filters.add(-1L);
         filters.add(0L);
 
         
         //do mid-level calculations here
-        Talent talent1 = talents.findByName(character.getTalent1()).orElse(new Talent(""));
-        Talent talent2 = talents.findByName(character.getTalent2()).orElse(new Talent(""));
+        Talent talent1 = character.getTalent1();
+        Talent talent2 = character.getTalent2();
         result.setHitPointsMax(HPBASE + talent1.getHpBonus() + talent2.getHpBonus());
 
         int mpTalents = talent1.isCaster() ? TALENTMANA : 0;
         mpTalents += talent2.isCaster() ? TALENTMANA : 0;
-        int level = getAttributeLevel(character.getAttribute1(), character.getAttribute2());
+        int level = character.getAttributeLevel();
         result.setManaMax(MANABASE + (MANAFOCUSMULT * result.getFocus()) + mpTalents + level);
         
         result.setDexterity((int) Math.ceil(ABILITYMULT * (result.getPrecision() + result.getFitness())));
@@ -120,29 +112,35 @@ public class StateOperations {
     }
 
     //recalculates state in case of equip
-    public CharacterDAO calculateState(String effectName, CharacterState state) {
+    public CharacterDAO calculateState(String effectName, CharacterObject character) {
+        CharacterState state = character.getState();
         if(effectName!= null){
             Effect newEffect = effects.findByName(effectName);
             String conditionalCheck = newEffect != null ? newEffect.getConditionalCheck() : null;
             String effectString = state.getActiveEffects();
+
+            //if the effect is already in the active effect list, remove it
             if(effectString.contains(effectName)){
                 state.setActiveEffects(String.join("", effectString.split(effectName)));
             } else if(conditionalCheck != null && !conditionalCheck.equals("")){
+                //else, if there is a condition, check if any other active effect meets the condition
                 List<Effect> activeEffects = getActiveEffectsFromState(state);
                 boolean isMet = activeEffects.stream().filter((e)->e.getCharProperty().equalsIgnoreCase(conditionalCheck)).count() > 0;
+                //if the conditional is met, add it to the active effects list
                 if (isMet) {
                     effectString += effectString.length() >0 ? "," : "";
                     state.setActiveEffects(effectString + effectName);
                 }
             } else {
+                //if no condition and not already in active effects list, add it to the list
                 effectString += effectString.length() >0 ? "," : "";
                 state.setActiveEffects(effectString + effectName);
             }
         }
-        CharacterObject character = characters.findById(state.getCharacterId()).orElseThrow();
+        //then get re-calculate the state
         CharacterDAO result = new CharacterDAO();
-        result.setCalculatedState(calculateState(state, character));
-        result.setCharacterState(state);
+        result.setCalculatedState(calculateState(character));
+        result.setCharacter(character);
         return result;
     }
 
@@ -158,16 +156,5 @@ public class StateOperations {
             result += effect.getEffect() + ",";
         }
         return result.split(",");
-    }
-
-    public int getAttributeLevel(int attribute1, int attribute2) {
-        int total = 0;
-        while (attribute1 > 0 || attribute2 > 0) {
-            total += attribute1 & 1;
-            total += attribute2 & 1;
-            attribute1 >>= 1;
-            attribute2 >>= 1;
-        }
-        return total;
     }
 }

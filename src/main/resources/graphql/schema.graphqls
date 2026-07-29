@@ -8,7 +8,8 @@ type Query {
     getCharacterInventoryByType(characterId: String, itemType: String): [InventoryDAO]
     getItemListByType(itemType: String): [Item]
     getWeaponList: [Item]
-    getTalentsList: [String]
+    getTalentList: [Talent]
+    getAttributeList: [Attribute]
     getAncestryList(source: String): [Ancestry]
     getTraitsList(type: String): [Trait]
     getBackgroundList(source: String): [Background]
@@ -39,18 +40,19 @@ type CharacterObject {
     userId: String
     name: String
     attributeLevel: Int
-    attribute1: Int
-    attribute2: Int
-    talent1: String
-    talent2: String
-    size: String
-    ancestry: String
-    background: String
+    talent1: Talent
+    talent2: Talent
+    attributes1: [Attribute]
+    attributes2: [Attribute]
+    ancestry: AncestryInner
+    background: BackgroundInner
     baseFitness: Int
     basePrecision: Int
     baseFocus: Int
     baseSense: Int
+    size: String
     proficiencies: String
+    state: CharacterState
 }
 
 input inputCharacterObject {
@@ -58,18 +60,19 @@ input inputCharacterObject {
     userId: String
     name: String
     attributeLevel: Int
-    attribute1: Int
-    attribute2: Int
-    talent1: String
-    talent2: String
-    size: String
-    background: String
-    ancestry: String
+    talent1: inputTalent
+    talent2: inputTalent
+    attributes1: [inputAttribute]
+    attributes2: [inputAttribute]
+    ancestry: inputAncestryInner
+    background: inputBackgroundInner
     baseFitness: Int
     basePrecision: Int
     baseFocus: Int
     baseSense: Int
+    size: String
     proficiencies: String
+    state: inputCharacterState
 }
 
 type CharacterState {
@@ -79,7 +82,6 @@ type CharacterState {
     armor: Int
     manaPoints: Int
     activeEffects: String
-    inactiveEffects: String
 }
 
 input inputCharacterState {
@@ -89,7 +91,6 @@ input inputCharacterState {
     armor: Int
     manaPoints: Int
     activeEffects: String
-    inactiveEffects: String
 }
 
 type CalculatedState {
@@ -228,6 +229,15 @@ type Attribute {
     name: String
     talentName: String
     flag: Int
+    description1: String
+    description2: String
+}
+
+input inputAttribute {
+    id: String
+    name: String
+    talentName: String
+    flag: Int
     description: String
 }
 
@@ -242,7 +252,37 @@ type Ancestry {
     description: String
 }
 
+type AncestryInner {
+    id: String
+    name: String
+    parent: String
+    source: String
+    trait1: Trait
+    trait2: Trait
+    size: String
+    description: String
+}
+
+input inputAncestryInner {
+    id: String
+    name: String
+    parent: String
+    source: String
+    trait1: inputTrait
+    trait2: inputTrait
+    size: String
+    description: String
+}
+
 type Trait {
+    id: String
+    name: String
+    traitType: String
+    description: String
+    tags: String
+}
+
+input inputTrait {
     id: String
     name: String
     traitType: String
@@ -261,7 +301,44 @@ type Background {
     tags: String
 }
 
+type BackgroundInner {
+    id: String
+    name: String
+    source: String
+    parentTrait: Trait
+    childTrait: Trait
+    deity: String
+    description: String
+    tags: String
+}
+
+input inputBackgroundInner {
+    id: String
+    name: String
+    source: String
+    parentTrait: inputTrait
+    childTrait: inputTrait
+    deity: String
+    description: String
+    tags: String
+}
+
 type Talent {
+    id: String
+    name: String
+    ability1: String
+    ability2: String
+    description: String
+    hpBonus: Int
+    prioritySkills: String
+    role: String
+    complexity: Int
+    keystone: String
+    capstone: String
+    caster: Boolean
+}
+
+input inputTalent {
     id: String
     name: String
     ability1: String

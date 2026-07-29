@@ -1,7 +1,13 @@
 package com.spellblade.model;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.spellblade.model.inners.AncestryInner;
+import com.spellblade.model.inners.BackgroundInner;
+import com.spellblade.model.inners.CharacterState;
 
 import lombok.Data;
 
@@ -17,18 +23,19 @@ public class CharacterObject {
     private String userId;
 	private String name;
 	private int attributeLevel;
-    private String talent1;
-    private String talent2;
-    private int attribute1;
-    private int attribute2;
-    private String ancestry;
-    private String background;
+    private Talent talent1;
+    private Talent talent2;
+    private List<Attribute> attributes1;
+    private List<Attribute> attributes2;
+    private AncestryInner ancestry;
+    private BackgroundInner background;
     private int baseFitness;
     private int basePrecision;
     private int baseFocus;
     private int baseSense;
     private String size;
     private String proficiencies;
+    private CharacterState state;
 
     public CharacterObject(){}
 

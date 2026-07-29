@@ -36,14 +36,14 @@ public class CalculatedState {
         
     }
 
-    public CalculatedState(CharacterObject character, CharacterState state, int MOVEBASE){
+    public CalculatedState(CharacterObject character, int MOVEBASE){
         setFitness(character.getBaseFitness());
         setPrecision(character.getBasePrecision());
         setFocus(character.getBaseFocus());
         setSense(character.getBaseSense());
-        setHitPoints(state.getHitPoints());
-        setManaPoints(state.getManaPoints());
-        setArmor(state.getArmor());
+        setHitPoints(character.getState().getHitPoints());
+        setManaPoints(character.getState().getManaPoints());
+        setArmor(character.getState().getArmor());
         setMovement(MOVEBASE);
     }
 

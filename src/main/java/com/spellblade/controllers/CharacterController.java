@@ -9,14 +9,12 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import com.spellblade.model.CharacterObject;
-import com.spellblade.model.CharacterState;
 import com.spellblade.model.Inventory;
 import com.spellblade.model.Item;
-import com.spellblade.model.Talent;
+import com.spellblade.model.SpellCharacter;
 import com.spellblade.model.dao.BackgroundDAO;
 import com.spellblade.model.dao.CharacterDAO;
 import com.spellblade.model.dao.InventoryDAO;
-import com.spellblade.operations.AttributeOperations;
 import com.spellblade.operations.ItemOperations;
 import com.spellblade.operations.StateOperations;
 import com.spellblade.operations.TraitOperations;
@@ -24,7 +22,6 @@ import com.spellblade.repository.AncestryRepository;
 import com.spellblade.repository.AttributeLkpRepository;
 import com.spellblade.repository.BackgroundRepository;
 import com.spellblade.repository.CharacterObjectRepository;
-import com.spellblade.repository.CharacterStateRepository;
 import com.spellblade.repository.EffectRepository;
 import com.spellblade.repository.InventoryRepository;
 import com.spellblade.repository.ItemLkpRepository;
@@ -38,14 +35,10 @@ public class CharacterController {
 
     private final CharacterObjectRepository characters;
     private final ItemLkpRepository items;
-    private final TalentLkpRepository talents;
-    @Autowired
-    private CharacterStateRepository states;
 
     private final TraitOperations traitOperations;
 
     private final ItemOperations itemOperations;
-    private final AttributeOperations attributeOperations;
     private final StateOperations stateOperations;
 
     @Autowired
@@ -55,11 +48,9 @@ public class CharacterController {
                              TalentLkpRepository talents, CharacterObjectRepository characters, AncestryRepository ancestries, BackgroundRepository backgrounds, TraitRepository traits){
 
         this.items = items;
-        this.talents = talents;
         this.characters = characters;
         this.itemOperations = new ItemOperations(items, inventory);
-        this.attributeOperations = new AttributeOperations(attribute);
-        this.stateOperations = new StateOperations(effects, talents, characters);
+        this.stateOperations = new StateOperations(effects);
         this.traitOperations = new TraitOperations(ancestries, traits, backgrounds);
     }
 
@@ -72,20 +63,17 @@ public class CharacterController {
 
         checkProficiencyChange(characterDAO);
 
-        characterDAO.getCharacterState().setCharacterId(characterDAO.getCharacter().getId());
-
-        CharacterState characterState = states.save(characterDAO.getCharacterState());
-
         CharacterObject savedCharacter = characters.save(characterDAO.getCharacter());
         itemOperations.saveUpdateItems(characterDAO.getInventory(), savedCharacter.getId());
 
         List<InventoryDAO> inventoryDAOs = itemOperations.createInventoryDAOList(savedCharacter.getId());
 
+        List<SpellCharacter> characterSpells = new ArrayList<>();
         if(characterDAO.getSpells() != null) {
-            spellCharacters.saveAll(characterDAO.getSpells());
+            characterSpells = spellCharacters.saveAll(characterDAO.getSpells());
         }
 
-        return new CharacterDAO(inventoryDAOs, savedCharacter, characterState);
+        return new CharacterDAO(inventoryDAOs, savedCharacter, characterSpells);
     }
 
     //See Tin
@@ -99,8 +87,8 @@ public class CharacterController {
     public CharacterDAO characterById(@Argument String characterId) {
         CharacterObject character = characters.findById(characterId).orElseThrow();
         List<InventoryDAO> inventoryDAOs = itemOperations.createInventoryDAOList(character.getId());
-        CharacterState characterState = states.findByCharacterId(characterId).orElse(new CharacterState());
-        return new CharacterDAO(inventoryDAOs, character, characterState);
+        List<SpellCharacter> characterSpells = spellCharacters.findByCharacterId(characterId);
+        return new CharacterDAO(inventoryDAOs, character, characterSpells);
     }
 
     //gets all of the data needed to read the character sheet.
@@ -112,19 +100,10 @@ public class CharacterController {
         result.setCharacter(character);
         result.setInventory(itemOperations.createInventoryDAOList(characterId));
         result.setProficiencies(itemOperations.getProficiencyNames(character.getProficiencies()));
-        
-        result.setAttributes(attributeOperations.getAttributeFromTalentAndFlags(character));
-        List<Talent> charTalents = new ArrayList<>();
-        charTalents.add(talents.findByName(character.getTalent1()).orElseThrow());
-        charTalents.add(talents.findByName(character.getTalent2()).orElseThrow());
-        result.setTalents(charTalents);
 
-        result.setCharacterState(states.findByCharacterId(characterId).orElse(new CharacterState()));
-        result.setCalculatedState(stateOperations.calculateState(result.getCharacterState(), character));
+        result.setCalculatedState(stateOperations.calculateState(character));
 
         result.setSpells(spellCharacters.findByCharacterId(characterId));
-
-        result.setTraitData(traitOperations.collectTraitDetails(character));
 
         return result;
     }

@@ -3,7 +3,6 @@ package com.spellblade.controllers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import com.spellblade.model.Attribute;
 import com.spellblade.model.Talent;
 import com.spellblade.model.dao.TalentDAO;
-import com.spellblade.operations.AttributeOperations;
 import com.spellblade.repository.AttributeLkpRepository;
 import com.spellblade.repository.TalentLkpRepository;
 
@@ -22,10 +20,9 @@ import com.spellblade.repository.TalentLkpRepository;
 public class TalentController {
 
     @Autowired
-    private AttributeLkpRepository attribute;
+    private AttributeLkpRepository attributes;
     @Autowired
     private TalentLkpRepository talents;
-    private AttributeOperations attributeOperations;
 
     @QueryMapping
     public List<TalentDAO> getTalentAndAttributeData(@Argument String talent1Name, @Argument String talent2Name){
@@ -38,16 +35,20 @@ public class TalentController {
     private TalentDAO getTalentData(String talentName) {
         TalentDAO result = new TalentDAO();
         result.setTalent(talents.findByName(talentName).orElse(new Talent()));
-        List<Attribute> attributeList = attribute.findByTalentName(talentName);
+        List<Attribute> attributeList = attributes.findByTalentName(talentName);
         Collections.sort(attributeList, (Attribute i1, Attribute i2) -> i1.getFlag() - i2.getFlag());
         result.setAttributes(attributeList);
         return result;
     }
 
     @QueryMapping
-    public List<String> getTalentsList(){
-        List<Talent> talentList = talents.findAll();
-        return talentList.stream().map((talent)->talent.getName()).collect(Collectors.toList());
+    public List<Talent> getTalentList(){
+        return talents.findAll();
+    }
+
+    @QueryMapping
+    public List<Attribute> getAttributeList(){
+        return attributes.findAll();
     }
     
 }
