@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.spellblade.model.Ancestry;
+import com.spellblade.model.Background;
 
 
 //has some built in methods like findById()
@@ -13,8 +13,7 @@ import com.spellblade.model.Ancestry;
 //(see: https://docs.spring.io/spring-data/mongodb/reference/repositories/query-methods-details.html)
 
 
-public interface AncestryRepository extends MongoRepository<Ancestry, String> {  
-    Optional<Ancestry> findByName(String name);
-    List<Ancestry> findBySource(String source);
-    List<Ancestry> findByParent(String variant);
+public interface BackgroundRepository extends MongoRepository<Background, String> {  
+    Optional<Background> findByName(String name);
+    List<Background> findBySource(String source);
 }

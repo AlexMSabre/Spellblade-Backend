@@ -21,5 +21,6 @@ public class Inventory {
         this.itemId = itemId;
         this.characterId = characterId;
         this.quantity = quantity;
+        equipped = false;
     }
 }

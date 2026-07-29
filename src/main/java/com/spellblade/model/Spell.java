@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
 
-@Document("SPELLS_LKP")
+@Document("SPELL")
 @Data
 public class Spell {
 

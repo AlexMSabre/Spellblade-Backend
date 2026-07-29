@@ -22,6 +22,7 @@ public class CharacterDAO {
     private CharacterState characterState;
     private CalculatedState calculatedState;
     private List<SpellCharacter> spells;
+    private TraitsDAO traitData;
 
     public CharacterDAO() {}
 
@@ -37,7 +38,8 @@ public class CharacterDAO {
 
     public CharacterDAO(List<InventoryDAO> inventory, CharacterObject character,
          List<Attribute> attributes, List<Talent> talents, List<ProficiencyDAO> proficiencies,
-         CharacterState characterState, CalculatedState calculatedState, List<SpellCharacter> spells){
+         CharacterState characterState, CalculatedState calculatedState, List<SpellCharacter> spells,
+         TraitsDAO traitData){
         this.inventory = inventory;
         this.character = character;
         this.attributes = attributes;
@@ -46,6 +48,7 @@ public class CharacterDAO {
         this.characterState = characterState;
         this.calculatedState = calculatedState; 
         this.spells = spells;
+        this.traitData = traitData;
     }
 
 }

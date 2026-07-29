@@ -9,13 +9,29 @@ type Query {
     getItemListByType(itemType: String): [Item]
     getWeaponList: [Item]
     getTalentsList: [String]
-    getAncestryList: [Ancestry]
+    getAncestryList(source: String): [Ancestry]
+    getTraitsList(type: String): [Trait]
+    getBackgroundList(source: String): [Background]
+    getBackgroundScreen(source:String): BackgroundDAO
     getProficiencyNames(proficiencies: String): [ProficiencyDAO]
     getTalentAndAttributeData(talent1Name: String, talent2Name: String): [TalentDAO]
     calculateState(state: inputCharacterState, character: inputCharacterObject): CalculatedState
     getCharacterStateById(id: String): CharacterState
-    addEffect(effectName: String, state: inputCharacterState): CharacterDAO
     getAllSpells: [Spell]
+    createGame(ownerId: String): Game
+    saveGame(game: inputGame): Game
+    getGameById(gameId:String): GameDAO
+    createSpellCharacter(characterId: String, spellId: String): SpellCharacter
+}
+
+type Mutation {
+    addEffect(effectName: String, state: inputCharacterState): CharacterDAO
+    addCharactersToGame(gameId:String, characterId: String): Game
+    changeGameOwner(gameId: String, userId: String): Game
+    RemoveCharacterFromGame(gameId: String, characterId: String): GameDAO
+    modifyPartyInventoryItem(inventoryItem: inputPartyInventory): PartyInventory
+    saveSpellCharacter(characterSpells: [inputSpellCharacter]): Int 
+    changeItemOwner(inventoryItem: inputInventory, newOwnerId: String, transferQuantity: Int): Int
 }
 
 type CharacterObject {
@@ -28,8 +44,8 @@ type CharacterObject {
     talent1: String
     talent2: String
     size: String
-    ancestryTrait: String
-    ancestryName: String
+    ancestry: String
+    background: String
     baseFitness: Int
     basePrecision: Int
     baseFocus: Int
@@ -47,8 +63,8 @@ input inputCharacterObject {
     talent1: String
     talent2: String
     size: String
-    ancestryTrait: String
-    ancestryName: String
+    background: String
+    ancestry: String
     baseFitness: Int
     basePrecision: Int
     baseFocus: Int
@@ -102,17 +118,23 @@ type CalculatedState {
     movement: Int
 }
 
-type InventoryDAO {
-    inventory: Inventory
-    item: Item
-}
-
-input inputInventoryDAO {
-    inventory: inputInventory
-    item: inputItem
-}
-
 type Spell {
+    id: String
+    name: String
+    spellType: String
+    source: String
+    actionCost: String
+    manaCost: Int
+    range: String
+    duration: String
+    description: String
+    effectAmount: String
+    effectConditional: String
+    effectType: String
+    tags: String
+}
+
+input inputSpell {
     id: String
     name: String
     spellType: String
@@ -212,9 +234,31 @@ type Attribute {
 type Ancestry {
     id: String
     name: String
+    parent: String
     source: String
-    trait: String
+    trait1: String
+    trait2: String
     size: String
+    description: String
+}
+
+type Trait {
+    id: String
+    name: String
+    traitType: String
+    description: String
+    tags: String
+}
+
+type Background {
+    id: String
+    name: String
+    source: String
+    parentTrait: String
+    childTrait: String
+    deity: String
+    description: String
+    tags: String
 }
 
 type Talent {
@@ -232,6 +276,42 @@ type Talent {
     caster: Boolean
 }
 
+type Game {
+    id: String
+    ownerId: String
+    characterIds: String
+    playerIds: String
+    joinCode: String
+}
+
+input inputGame {
+    id: String
+    ownerId: String
+    characterIds: String
+    playerIds: String
+    joinCode: String
+}
+
+type PartyInventory {
+    id: String
+    gameId: String
+    itemId: String
+    location: String
+}
+
+input inputPartyInventory {
+    id: String
+    gameId: String
+    itemId: String
+    location: String
+}
+
+type GameDAO {
+    game: Game
+    characters: [CharacterObject]
+    partyInventory: [PartyInventory]
+}
+
 type CharacterDAO {
     inventory: [InventoryDAO]
     character: CharacterObject
@@ -241,6 +321,7 @@ type CharacterDAO {
     characterState: CharacterState
     calculatedState: CalculatedState
     spells: [SpellCharacter]
+    traitData: TraitDAO
 }
 
 input inputCharacterDAO {
@@ -258,4 +339,36 @@ type ProficiencyDAO {
 type TalentDAO { 
     talent: Talent
     attributes: [Attribute]
+}
+
+type SpellDAO{
+    spell: Spell
+    SpellCharacter: SpellCharacter
+}
+
+input inputSpellDAO{
+    spell: inputSpell
+    SpellCharacter: inputSpellCharacter
+}
+
+type InventoryDAO {
+    inventory: Inventory
+    item: Item
+}
+
+input inputInventoryDAO {
+    inventory: inputInventory
+    item: inputItem
+}
+
+type TraitDAO {
+    ancestry: Ancestry
+    background: Background
+    traits: [Trait]
+}
+
+type BackgroundDAO {
+    ancestries: [Ancestry]
+    backgrounds: [Background]
+    traits: [Trait]
 }

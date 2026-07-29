@@ -11,9 +11,12 @@ public class Ancestry {
 
     @Id private String id;
     private String name;
+    private String parent;
     private String source;
-    private String trait;
+    private String trait1;
+    private String trait2;
     private String size;
+    private String description;
     
     public Ancestry(){}
 }

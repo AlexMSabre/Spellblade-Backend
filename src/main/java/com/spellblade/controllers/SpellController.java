@@ -2,11 +2,14 @@ package com.spellblade.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import com.spellblade.model.Spell;
+import com.spellblade.model.SpellCharacter;
+import com.spellblade.operations.SpellOperations;
 import com.spellblade.repository.SpellCharacterRepository;
 import com.spellblade.repository.SpellRepository;
 
@@ -14,15 +17,37 @@ import com.spellblade.repository.SpellRepository;
 @Controller
 public class SpellController {
     
-    @Autowired
-    private SpellCharacterRepository spellCharacters;
-    @Autowired
-    private SpellRepository spells;
+    private final SpellCharacterRepository spellCharacters;
+    private final SpellRepository spells; 
+    private final SpellOperations spellOps;
+
+    public SpellController(SpellCharacterRepository spellCharacters, SpellRepository spells){
+        this.spells = spells;
+        this.spellCharacters = spellCharacters;
+        this.spellOps = new SpellOperations(spells, spellCharacters);
+    }
 
     @QueryMapping
     public List<Spell> getAllSpells() {
         return spells.findAll();
     }
+
+    @QueryMapping
+    public SpellCharacter createSpellCharacter(@Argument String characterId, @Argument String spellId){
+        List<SpellCharacter> characterSpells = spellCharacters.findByCharacterId(characterId);
+        if(!characterSpells.stream().anyMatch(relation->relation.getSpellId().equals(spellId))){
+            return spellCharacters.save(new SpellCharacter(characterId, spellId));
+        } else {
+            return characterSpells.stream().filter(cs->cs.getSpellId().equals(spellId)).findFirst().orElseThrow();
+        }
+    }
+
+    @MutationMapping
+    public int saveSpellCharacter(@Argument List<SpellCharacter> characterSpells){
+        spellOps.saveUpdateSpells(characterSpells);
+        return 1;
+    }
+
 
     
 }

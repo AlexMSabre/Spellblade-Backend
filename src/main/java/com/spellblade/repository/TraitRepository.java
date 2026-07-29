@@ -5,16 +5,17 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.spellblade.model.Ancestry;
+import com.spellblade.model.Trait;
 
 
+//The Repository object for the Items
 //has some built in methods like findById()
 //you can create some methods that will autogenerate for other fields as demonstrated below 
 //(see: https://docs.spring.io/spring-data/mongodb/reference/repositories/query-methods-details.html)
 
 
-public interface AncestryRepository extends MongoRepository<Ancestry, String> {  
-    Optional<Ancestry> findByName(String name);
-    List<Ancestry> findBySource(String source);
-    List<Ancestry> findByParent(String variant);
+public interface TraitRepository extends MongoRepository<Trait, String> {  
+    Optional<Trait> findByName(String trait1);
+    List<Trait> findByTraitType(String type);
+    List<Trait> findByTagsContaining(String tag);
 }

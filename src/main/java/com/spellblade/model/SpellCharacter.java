@@ -14,4 +14,9 @@ public class SpellCharacter {
     private String spellId;
     
     public SpellCharacter(){}
+
+    public SpellCharacter(String characterId, String spellId){
+        this.characterId = characterId;
+        this.spellId = spellId;
+    }
 }

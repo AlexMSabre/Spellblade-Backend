@@ -5,17 +5,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
 
-@Document("EFFECT")
+@Document("BACKGROUND")
 @Data
-public class Effect {
+public class Background {
 
     @Id private String id;
     private String name;
+    private String source;
+    private String parentTrait;
+    private String childTrait;
+    private String deity;
     private String description;
-    private String charProperty;
-    private int effectType;
-    private String conditionalCheck;
-    private String effect;
-    
-    public Effect(){}
+
+    public Background(){}
 }

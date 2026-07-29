@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
@@ -70,6 +71,19 @@ public class InventoryController {
             results.stream(),
             items.findByItemTypeContainingOrderByItemType("Spellcasting").stream()
         ).toList();
+    }
+
+    @MutationMapping
+    public Integer changeItemOwner(@Argument Inventory inventoryItem, @Argument String newOwnerId, @Argument int transferQuantity){
+        if(inventoryItem.getQuantity() == transferQuantity){
+            inventoryItem.setCharacterId(newOwnerId);
+            inventoryItem.setEquipped(false);
+            inventory.save(inventoryItem);
+        } else {
+            inventory.save(new Inventory(inventoryItem.getItemId(), newOwnerId, transferQuantity));
+            inventoryItem.setQuantity(inventoryItem.getQuantity()-transferQuantity);
+        }
+        return 1;
     }
     
 }
