@@ -1,13 +1,11 @@
 package com.spellblade.controllers;
 
 import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import com.spellblade.model.CalculatedState;
 import com.spellblade.model.CharacterObject;
-import com.spellblade.model.dao.CharacterDAO;
 import com.spellblade.operations.StateOperations;
 import com.spellblade.repository.CharacterObjectRepository;
 import com.spellblade.repository.EffectRepository;
@@ -27,8 +25,8 @@ public class StateController {
         return stateOps.calculateState(character);
     }
 
-    @MutationMapping 
-    public CharacterDAO addEffect(@Argument String effectName, @Argument CharacterObject character){
-        return stateOps.calculateState(effectName, character);
-    }
+    // @MutationMapping 
+    // public CharacterDAO addEffect(@Argument String effectName, @Argument CharacterObject character){
+    //     return stateOps.calculateState(effectName, character);
+    // }
 }

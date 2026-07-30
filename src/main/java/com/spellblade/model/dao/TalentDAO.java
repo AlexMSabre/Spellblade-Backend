@@ -2,7 +2,7 @@ package com.spellblade.model.dao;
 
 import java.util.List;
 
-import com.spellblade.model.Attribute;
+import com.spellblade.model.Effect;
 import com.spellblade.model.Talent;
 
 import lombok.Data;
@@ -10,14 +10,14 @@ import lombok.Data;
 @Data
 public class TalentDAO {
 
-    private Talent talent;
-    private List<Attribute> attributes;
+    private List<Talent> talents;
+    private List<Effect> effects;
 
     public TalentDAO() {}
 
-    public TalentDAO(Talent talent, List<Attribute> attribute){
-        this.talent = talent;
-        this.attributes = attribute;
+    public TalentDAO(List<Talent> talents, List<Effect> effects){
+        this.talents = talents;
+        this.effects = effects;
     }
 
 }

@@ -2,7 +2,6 @@ package com.spellblade.operations;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -14,8 +13,6 @@ import com.spellblade.model.CalculatedState;
 import com.spellblade.model.CharacterObject;
 import com.spellblade.model.Effect;
 import com.spellblade.model.Talent;
-import com.spellblade.model.dao.CharacterDAO;
-import com.spellblade.model.inners.CharacterState;
 import com.spellblade.repository.EffectRepository;
 
 public class StateOperations {
@@ -39,7 +36,7 @@ public class StateOperations {
 
     public CalculatedState calculateState(CharacterObject character) {
 
-        List<Effect> effectList = getActiveEffectsFromState(character.getState());
+        List<Effect> effectList = new ArrayList<>(); //getActiveEffectsFromState(character.getState());
         effectList = effectList.stream().filter(e->e != null).collect(Collectors.toList());
         CalculatedState result = new CalculatedState(character, MOVEBASE);
         List<Long> filters = new ArrayList<>();
@@ -83,14 +80,14 @@ public class StateOperations {
         return result;
     }
 
-    private List<Effect> getActiveEffectsFromState(CharacterState state){
-        List<Effect> effectList = new ArrayList<>();
-        List<String> effectNames = Arrays.asList(state.getActiveEffects().split(","));
-        for (String name : effectNames) {
-            effectList.add(effects.findByName(name));
-        }
-        return effectList;
-    }
+    // private List<Effect> getActiveEffectsFromState(CharacterState state){
+    //     List<Effect> effectList = new ArrayList<>();
+    //     List<String> effectNames = Arrays.asList(state.getActiveEffects().split(","));
+    //     for (String name : effectNames) {
+    //         effectList.add(effects.findByName(name));
+    //     }
+    //     return effectList;
+    // }
 
     private void applyEffects(CalculatedState result, String[] applying) {
         Class[] params = new Class[1];
@@ -111,38 +108,38 @@ public class StateOperations {
         }
     }
 
-    //recalculates state in case of equip
-    public CharacterDAO calculateState(String effectName, CharacterObject character) {
-        CharacterState state = character.getState();
-        if(effectName!= null){
-            Effect newEffect = effects.findByName(effectName);
-            String conditionalCheck = newEffect != null ? newEffect.getConditionalCheck() : null;
-            String effectString = state.getActiveEffects();
+    // recalculates state in case of equip
+    // public CharacterDAO calculateState(String effectName, CharacterObject character) {
+    //     CharacterState state = character.getState();
+    //     if(effectName!= null){
+    //         Effect newEffect = effects.findByName(effectName);
+    //         String conditionalCheck = newEffect != null ? newEffect.getConditionalCheck() : null;
+    //         String effectString = state.getActiveEffects();
 
-            //if the effect is already in the active effect list, remove it
-            if(effectString.contains(effectName)){
-                state.setActiveEffects(String.join("", effectString.split(effectName)));
-            } else if(conditionalCheck != null && !conditionalCheck.equals("")){
-                //else, if there is a condition, check if any other active effect meets the condition
-                List<Effect> activeEffects = getActiveEffectsFromState(state);
-                boolean isMet = activeEffects.stream().filter((e)->e.getCharProperty().equalsIgnoreCase(conditionalCheck)).count() > 0;
-                //if the conditional is met, add it to the active effects list
-                if (isMet) {
-                    effectString += effectString.length() >0 ? "," : "";
-                    state.setActiveEffects(effectString + effectName);
-                }
-            } else {
-                //if no condition and not already in active effects list, add it to the list
-                effectString += effectString.length() >0 ? "," : "";
-                state.setActiveEffects(effectString + effectName);
-            }
-        }
-        //then get re-calculate the state
-        CharacterDAO result = new CharacterDAO();
-        result.setCalculatedState(calculateState(character));
-        result.setCharacter(character);
-        return result;
-    }
+    //         //if the effect is already in the active effect list, remove it
+    //         if(effectString.contains(effectName)){
+    //             state.setActiveEffects(String.join("", effectString.split(effectName)));
+    //         } else if(conditionalCheck != null && !conditionalCheck.equals("")){
+    //             //else, if there is a condition, check if any other active effect meets the condition
+    //             List<Effect> activeEffects = getActiveEffectsFromState(state);
+    //             boolean isMet = activeEffects.stream().filter((e)->e.getCharProperty().equalsIgnoreCase(conditionalCheck)).count() > 0;
+    //             //if the conditional is met, add it to the active effects list
+    //             if (isMet) {
+    //                 effectString += effectString.length() >0 ? "," : "";
+    //                 state.setActiveEffects(effectString + effectName);
+    //             }
+    //         } else {
+    //             //if no condition and not already in active effects list, add it to the list
+    //             effectString += effectString.length() >0 ? "," : "";
+    //             state.setActiveEffects(effectString + effectName);
+    //         }
+    //     }
+    //     //then get re-calculate the state
+    //     CharacterDAO result = new CharacterDAO();
+    //     result.setCalculatedState(calculateState(character));
+    //     result.setCharacter(character);
+    //     return result;
+    // }
 
 //gets all effects from a list that contain the given filters, 
 //then concatenates all of the effect text into one long string for processing

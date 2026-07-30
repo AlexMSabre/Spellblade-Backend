@@ -45,13 +45,14 @@ public class CharacterController {
     private SpellCharacterRepository spellCharacters;
 
     public CharacterController(InventoryRepository inventory, AttributeLkpRepository attribute, EffectRepository effects, ItemLkpRepository items,
-                             TalentLkpRepository talents, CharacterObjectRepository characters, AncestryRepository ancestries, BackgroundRepository backgrounds, TraitRepository traits){
+                            TalentLkpRepository talents, CharacterObjectRepository characters, AncestryRepository ancestries, BackgroundRepository backgrounds,
+                            TraitRepository traits){
 
         this.items = items;
         this.characters = characters;
         this.itemOperations = new ItemOperations(items, inventory);
-        this.stateOperations = new StateOperations(effects);
-        this.traitOperations = new TraitOperations(ancestries, traits, backgrounds);
+        this.stateOperations = new StateOperations(effects);                                                                
+        this.traitOperations = new TraitOperations(ancestries, traits, backgrounds, effects);
     }
 
     //creates/finds characters

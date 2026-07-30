@@ -1,5 +1,10 @@
 package com.spellblade.model.inners;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.spellblade.model.Effect;
+
 import lombok.Data;
 
 //the model for accessing Characters in the DB
@@ -13,12 +18,12 @@ public class CharacterState {
     private int hitPoints;
     private int armor;
     private int manaPoints;
-    private String inactiveEffects;
-    private String activeEffects;
+    private List<Effect> inactiveEffects;
+    private List<Effect> activeEffects;
 
     public CharacterState(){
-        activeEffects = "";
-        inactiveEffects = "";
+        activeEffects = new ArrayList<>();
+        inactiveEffects = new ArrayList<>();
     }
 
 }

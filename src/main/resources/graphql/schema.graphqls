@@ -9,6 +9,7 @@ type Query {
     getItemListByType(itemType: String): [Item]
     getWeaponList: [Item]
     getTalentList: [Talent]
+    getTalentScreen: TalentDAO
     getAttributeList: [Attribute]
     getAncestryList(source: String): [Ancestry]
     getTraitsList(type: String): [Trait]
@@ -16,7 +17,7 @@ type Query {
     getBackgroundScreen(source:String): BackgroundDAO
     getProficiencyNames(proficiencies: String): [ProficiencyDAO]
     getTalentAndAttributeData(talent1Name: String, talent2Name: String): [TalentDAO]
-    calculateState(state: inputCharacterState, character: inputCharacterObject): CalculatedState
+    calculateState(character: inputCharacterObject): CalculatedState
     getCharacterStateById(id: String): CharacterState
     getAllSpells: [Spell]
     createGame(ownerId: String): Game
@@ -81,7 +82,8 @@ type CharacterState {
     hitPoints: Int
     armor: Int
     manaPoints: Int
-    activeEffects: String
+    activeEffects: [Effect]
+    inactiveEffects: [Effect]
 }
 
 input inputCharacterState {
@@ -90,7 +92,27 @@ input inputCharacterState {
     hitPoints: Int
     armor: Int
     manaPoints: Int
-    activeEffects: String
+    activeEffects: [inputEffect]
+    inactiveEffects: [inputEffect]
+}
+
+type Effect {
+    id: String
+    name: String
+    description: String
+    charProperty: String
+    effectType: Int
+    conditionalCheck: String
+    effect: String
+}
+input inputEffect {
+    id: String
+    name: String
+    description: String
+    charProperty: String
+    effectType: Int
+    conditionalCheck: String
+    effect: String
 }
 
 type CalculatedState {
@@ -212,16 +234,6 @@ input inputItem {
     effectName: String
     baseCost: Int
     rarity: String
-}
-
-type Effect {
-    id: String
-    name: String
-    description: String
-    charProperty: String
-    effectType: Int
-    conditionalCheck: String
-    effect: String
 }
 
 type Attribute {
@@ -414,8 +426,8 @@ type ProficiencyDAO {
 }
 
 type TalentDAO { 
-    talent: Talent
-    attributes: [Attribute]
+    talents: [Talent]
+    effects: [Effect]
 }
 
 type SpellDAO{
@@ -448,4 +460,5 @@ type BackgroundDAO {
     ancestries: [Ancestry]
     backgrounds: [Background]
     traits: [Trait]
+    effects: [Effect]
 }
