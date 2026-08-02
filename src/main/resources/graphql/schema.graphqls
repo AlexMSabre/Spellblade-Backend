@@ -9,20 +9,22 @@ type Query {
     getItemListByType(itemType: String): [Item]
     getWeaponList: [Item]
     getTalentList: [Talent]
-    getTalentScreen: TalentDAO
+    getTalentScreen: TalentScreen
     getAttributeList: [Attribute]
     getAncestryList(source: String): [Ancestry]
     getTraitsList(type: String): [Trait]
     getBackgroundList(source: String): [Background]
-    getBackgroundScreen(source:String): BackgroundDAO
+    getBackgroundScreen(source:String): BackgroundScreen
     getProficiencyNames(proficiencies: String): [ProficiencyDAO]
-    getTalentAndAttributeData(talent1Name: String, talent2Name: String): [TalentDAO]
+    getTalentAndAttributeData(talent1Name: String, talent2Name: String): [TalentScreen]
     calculateState(character: inputCharacterObject): CalculatedState
     getCharacterStateById(id: String): CharacterState
     getAllSpells: [Spell]
+    getFilteredSpells(sources: [String]): [Spell]
     createGame(ownerId: String): Game
     saveGame(game: inputGame): Game
     getGameById(gameId:String): GameDAO
+    getEquipmentScreen(characterId: String): EquipmentScreen
     createSpellCharacter(characterId: String, spellId: String): SpellCharacter
 }
 
@@ -236,6 +238,20 @@ input inputItem {
     rarity: String
 }
 
+type Pack {
+    id: String
+    name: String
+    background: String
+    currency: Int
+    rations: Int
+    salves: Int
+    reagents: String
+    materials: String
+    innerwear: String
+    outerwear: String
+    items: String
+}
+
 type Attribute {
     id: String
     name: String
@@ -425,7 +441,7 @@ type ProficiencyDAO {
     mastery: Boolean
 }
 
-type TalentDAO { 
+type TalentScreen { 
     talents: [Talent]
     effects: [Effect]
 }
@@ -456,9 +472,15 @@ type TraitDAO {
     traits: [Trait]
 }
 
-type BackgroundDAO {
+type BackgroundScreen {
     ancestries: [Ancestry]
     backgrounds: [Background]
     traits: [Trait]
     effects: [Effect]
+}
+
+type EquipmentScreen {
+    inventory: [Inventory]
+    items: [Item]
+    packs: [Pack]
 }

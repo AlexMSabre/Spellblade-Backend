@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.spellblade.model.Trait;
-import com.spellblade.model.dao.BackgroundDAO;
+import com.spellblade.model.screens.BackgroundScreen;
 import com.spellblade.repository.AncestryRepository;
 import com.spellblade.repository.BackgroundRepository;
 import com.spellblade.repository.EffectRepository;
@@ -24,26 +24,8 @@ public class TraitOperations{
         this.effects = effects;
     }
 
-    // public TraitsDAO collectTraitDetails(CharacterObject character){
-    //     TraitsDAO result = new TraitsDAO();
-
-    //     result.setAncestry(ancestries.findByName(character.getAncestry()).orElseThrow());
-    //     result.setBackground(backgrounds.findByName(character.getBackground()).orElseThrow());
-
-    //     List<Trait> characterTraits = new ArrayList<>();
-        
-    //     characterTraits.add(traits.findByName(result.getAncestry().getTrait1()).orElseThrow());
-    //     characterTraits.add(traits.findByName(result.getAncestry().getTrait2()).orElseThrow());
-    //     characterTraits.add(traits.findByName(result.getBackground().getParentTrait()).orElseThrow());
-    //     characterTraits.add(traits.findByName(result.getBackground().getChildTrait()).orElseThrow());
-
-    //     result.setTraits(characterTraits);
-
-    //     return result;
-    // }
-
-    public BackgroundDAO collectBackgroundScreenData(String source){
-        BackgroundDAO result = new BackgroundDAO();
+    public BackgroundScreen collectBackgroundScreenData(String source){
+        BackgroundScreen result = new BackgroundScreen();
         boolean isSourced = source.equals("");
         result.setBackgrounds(isSourced ? backgrounds.findAll() :  backgrounds.findBySource(source));
         result.setAncestries(isSourced ? ancestries.findAll() :  ancestries.findBySource(source));

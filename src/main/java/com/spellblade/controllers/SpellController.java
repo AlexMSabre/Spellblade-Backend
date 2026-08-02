@@ -1,5 +1,6 @@
 package com.spellblade.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -30,6 +31,13 @@ public class SpellController {
     @QueryMapping
     public List<Spell> getAllSpells() {
         return spells.findAll();
+    }
+
+    @QueryMapping
+    public List<Spell> getFilteredSpells(@Argument List<String> sources){
+        List<Spell> result= new ArrayList<>();
+        sources.forEach(f->result.addAll(spells.findBySourceContaining(f)));
+        return result;
     }
 
     @QueryMapping

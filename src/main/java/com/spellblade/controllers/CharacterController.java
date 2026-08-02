@@ -12,7 +12,7 @@ import com.spellblade.model.CharacterObject;
 import com.spellblade.model.Inventory;
 import com.spellblade.model.Item;
 import com.spellblade.model.SpellCharacter;
-import com.spellblade.model.dao.BackgroundDAO;
+import com.spellblade.model.screens.BackgroundScreen;
 import com.spellblade.model.dao.CharacterDAO;
 import com.spellblade.model.dao.InventoryDAO;
 import com.spellblade.operations.ItemOperations;
@@ -161,7 +161,7 @@ public class CharacterController {
     
 
     @QueryMapping
-    public BackgroundDAO getBackgroundScreen(@Argument String source){
+    public BackgroundScreen getBackgroundScreen(@Argument String source){
         return traitOperations.collectBackgroundScreenData(source);
     }
 }

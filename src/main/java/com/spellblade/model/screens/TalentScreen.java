@@ -1,4 +1,4 @@
-package com.spellblade.model.dao;
+package com.spellblade.model.screens;
 
 import java.util.List;
 
@@ -8,14 +8,14 @@ import com.spellblade.model.Talent;
 import lombok.Data;
 
 @Data
-public class TalentDAO {
+public class TalentScreen {
 
     private List<Talent> talents;
     private List<Effect> effects;
 
-    public TalentDAO() {}
+    public TalentScreen() {}
 
-    public TalentDAO(List<Talent> talents, List<Effect> effects){
+    public TalentScreen(List<Talent> talents, List<Effect> effects){
         this.talents = talents;
         this.effects = effects;
     }

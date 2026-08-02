@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import com.spellblade.model.Attribute;
 import com.spellblade.model.Effect;
 import com.spellblade.model.Talent;
-import com.spellblade.model.dao.TalentDAO;
+import com.spellblade.model.screens.TalentScreen;
 import com.spellblade.repository.AttributeLkpRepository;
 import com.spellblade.repository.EffectRepository;
 import com.spellblade.repository.TalentLkpRepository;
@@ -28,20 +28,20 @@ public class TalentController {
     private EffectRepository effects;
 
     @QueryMapping
-    public List<TalentDAO> getTalentAndAttributeData(@Argument String talent1Name, @Argument String talent2Name){
-        List<TalentDAO> results = new ArrayList<>();
+    public List<TalentScreen> getTalentAndAttributeData(@Argument String talent1Name, @Argument String talent2Name){
+        List<TalentScreen> results = new ArrayList<>();
         results.add(getTalentData(talent1Name));
         results.add(getTalentData(talent2Name));
         return results;
     }
 
     @QueryMapping
-    public TalentDAO getTalentScreen() {
+    public TalentScreen getTalentScreen() {
         return getTalentData("");
     }
 
-    private TalentDAO getTalentData(String talentName) {
-        TalentDAO result = new TalentDAO();
+    private TalentScreen getTalentData(String talentName) {
+        TalentScreen result = new TalentScreen();
         result.setTalents(talents.findAll());
         List<Effect> effectList = new ArrayList<>();
         result.getTalents().forEach(t-> effectList.addAll(effects.findByNameContainingIgnoreCase(t.getName())));

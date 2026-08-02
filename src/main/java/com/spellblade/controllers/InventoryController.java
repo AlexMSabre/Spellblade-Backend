@@ -1,5 +1,6 @@
 package com.spellblade.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -12,9 +13,11 @@ import org.springframework.stereotype.Controller;
 import com.spellblade.model.Inventory;
 import com.spellblade.model.Item;
 import com.spellblade.model.dao.InventoryDAO;
+import com.spellblade.model.screens.EquipmentScreen;
 import com.spellblade.operations.ItemOperations;
 import com.spellblade.repository.InventoryRepository;
 import com.spellblade.repository.ItemLkpRepository;
+import com.spellblade.repository.PackRepository;
 
 //the endpoints for everything related to characters
 @Controller
@@ -24,6 +27,8 @@ public class InventoryController {
     private ItemLkpRepository items;
     @Autowired
     private InventoryRepository inventory;
+    @Autowired
+    private PackRepository packs;
     private final ItemOperations itemOperations;
 
     public InventoryController(){
@@ -86,4 +91,14 @@ public class InventoryController {
         return 1;
     }
     
+
+    @QueryMapping
+    public EquipmentScreen getEquipmentScreen(@Argument String characterId){
+        EquipmentScreen result = new EquipmentScreen();
+        result.setPacks(packs.findAll());
+        result.setItems(items.findAll());
+        result.setInventory(characterId.equals("") ? new ArrayList<>() :  inventory.findByCharacterId(characterId));
+
+        return result;
+    }
 }
