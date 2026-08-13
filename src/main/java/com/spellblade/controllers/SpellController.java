@@ -40,16 +40,6 @@ public class SpellController {
         return result;
     }
 
-    @QueryMapping
-    public SpellCharacter createSpellCharacter(@Argument String characterId, @Argument String spellId){
-        List<SpellCharacter> characterSpells = spellCharacters.findByCharacterId(characterId);
-        if(!characterSpells.stream().anyMatch(relation->relation.getSpellId().equals(spellId))){
-            return spellCharacters.save(new SpellCharacter(characterId, spellId));
-        } else {
-            return characterSpells.stream().filter(cs->cs.getSpellId().equals(spellId)).findFirst().orElseThrow();
-        }
-    }
-
     @MutationMapping
     public int saveSpellCharacter(@Argument List<SpellCharacter> characterSpells){
         spellOps.saveUpdateSpells(characterSpells);

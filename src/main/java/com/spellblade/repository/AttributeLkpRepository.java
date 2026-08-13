@@ -15,5 +15,4 @@ import com.spellblade.model.Attribute;
 
 public interface AttributeLkpRepository extends MongoRepository<Attribute, String> {  
     List<Attribute> findByTalentName(String name);
-    Attribute findByTalentNameAndFlag(String name, int flag);
 }

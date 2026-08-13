@@ -34,7 +34,7 @@ public class CharacterObject {
     private int baseFocus;
     private int baseSense;
     private String size;
-    private String proficiencies;
+    private List<String> proficiencies;
     private CharacterState state;
 
     public CharacterObject(){}

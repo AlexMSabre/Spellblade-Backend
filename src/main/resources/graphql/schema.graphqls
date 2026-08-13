@@ -54,7 +54,7 @@ type CharacterObject {
     baseFocus: Int
     baseSense: Int
     size: String
-    proficiencies: String
+    proficiencies: [String]
     state: CharacterState
 }
 
@@ -74,7 +74,7 @@ input inputCharacterObject {
     baseFocus: Int
     baseSense: Int
     size: String
-    proficiencies: String
+    proficiencies: [String]
     state: inputCharacterState
 }
 
@@ -83,6 +83,7 @@ type CharacterState {
     characterId: String
     hitPoints: Int
     armor: Int
+    wounds: Int
     manaPoints: Int
     activeEffects: [Effect]
     inactiveEffects: [Effect]
@@ -93,6 +94,7 @@ input inputCharacterState {
     characterId: String
     hitPoints: Int
     armor: Int
+    wounds: Int
     manaPoints: Int
     activeEffects: [inputEffect]
     inactiveEffects: [inputEffect]
@@ -214,8 +216,8 @@ type Item {
     weight: Float
     description: String
     properties: String
-    attack1String: String
-    attack2String: String
+    attack: Attack
+    special: Special
     effectName: String
     baseCost: Int
     rarity: String
@@ -229,14 +231,43 @@ input inputItem {
     equippable: Boolean
     size: String
     weight: Float
+    attack: inputAttack
+    special: inputSpecial
     description: String
     properties: String
-    attack1String: String
-    attack2String: String
     effectName: String
     baseCost: Int
     rarity: String
 }
+
+type Attack {
+    name: String
+    action: Int
+    range: String
+    damage: String
+    damageType: String
+}
+
+type Special {
+    name: String
+    action: Int
+    description: String
+}
+
+input inputAttack {
+    name: String
+    action: Int
+    range: String
+    damage: String
+    damageType: String
+}
+
+input inputSpecial {
+    name: String
+    action: Int
+    description: String
+}
+
 
 type Pack {
     id: String
@@ -256,7 +287,6 @@ type Attribute {
     id: String
     name: String
     talentName: String
-    flag: Int
     description1: String
     description2: String
 }
@@ -265,8 +295,8 @@ input inputAttribute {
     id: String
     name: String
     talentName: String
-    flag: Int
-    description: String
+    description1: String
+    description2: String
 }
 
 type Ancestry {
@@ -420,20 +450,15 @@ type GameDAO {
 type CharacterDAO {
     inventory: [InventoryDAO]
     character: CharacterObject
-    attributes: [Attribute]
-    talents: [Talent]
-    proficiencies: [ProficiencyDAO]
-    characterState: CharacterState
     calculatedState: CalculatedState
-    spells: [SpellCharacter]
+    spells: [SpellDAO]
     traitData: TraitDAO
 }
 
 input inputCharacterDAO {
     inventory: [inputInventoryDAO]
     character: inputCharacterObject
-    characterState: inputCharacterState
-    spells: [inputSpellCharacter]
+    spells: [inputSpellDAO]
 }
 
 type ProficiencyDAO {
@@ -448,12 +473,12 @@ type TalentScreen {
 
 type SpellDAO{
     spell: Spell
-    SpellCharacter: SpellCharacter
+    spellCharacter: SpellCharacter
 }
 
 input inputSpellDAO{
     spell: inputSpell
-    SpellCharacter: inputSpellCharacter
+    spellCharacter: inputSpellCharacter
 }
 
 type InventoryDAO {

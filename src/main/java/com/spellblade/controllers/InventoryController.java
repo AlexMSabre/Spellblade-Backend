@@ -98,7 +98,6 @@ public class InventoryController {
         result.setPacks(packs.findAll());
         result.setItems(items.findAll());
         result.setInventory(characterId.equals("") ? new ArrayList<>() :  inventory.findByCharacterId(characterId));
-
         return result;
     }
 }

@@ -32,4 +32,6 @@ public class AncestryInner {
         this.trait1 = trait1;
         this.trait2 = trait2;
     }
+
+    public AncestryInner(){}
 }

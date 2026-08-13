@@ -12,7 +12,6 @@ public class Attribute {
     @Id private String id;
     private String name;
     private String talentName;
-    private int flag;
     private String description1;
     private String description2;
     
