@@ -23,6 +23,7 @@ type Mutation {
     modifyPartyInventoryItem(inventoryItem: inputPartyInventory): PartyInventory
     saveSpellCharacter(characterSpells: [inputSpellCharacter]): Int 
     changeItemOwner(inventoryItem: inputInventory, newOwnerId: String, transferQuantity: Int): Int
+    deleteCharacter(characterId: String): Boolean
 }
 
 type CharacterObject {
