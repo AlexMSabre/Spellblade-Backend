@@ -2,7 +2,6 @@ package com.spellblade.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -48,34 +47,10 @@ public class InventoryController {
         return itemOperations.createInventoryDAOList(characterId);
     }
 
-    @QueryMapping
-    public List<InventoryDAO> getCharacterInventoryByType(@Argument String characterId, @Argument String itemType){
-        //filters out the list by item type, returning only those that match
-        return itemOperations.createInventoryDAOList(characterId)
-                .stream()
-                .filter(b-> b.getItem().getItemType().contains(itemType))
-                .toList();
-    }
-
     //itemtype does not need to be exact 
     @QueryMapping
     public List<Item> getItemListByType(@Argument String itemType) {
         return items.findByItemTypeContainingOrderByItemType(itemType);
-    }
-
-    @QueryMapping
-    public List<Item> getWeaponList() {
-        //gets all weapon and shield items and puts them in one list
-        List<Item> results = Stream.concat(
-            items.findByItemTypeContainingOrderByItemType("Weapon").stream(),
-            items.findByItemTypeContainingOrderByItemType("Shield").stream()
-        ).toList();
-
-        //adds spellcasting tools to the list and returns
-        return Stream.concat(
-            results.stream(),
-            items.findByItemTypeContainingOrderByItemType("Spellcasting").stream()
-        ).toList();
     }
 
     @MutationMapping

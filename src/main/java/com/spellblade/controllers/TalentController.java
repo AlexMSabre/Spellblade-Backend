@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 
 import com.spellblade.model.Attribute;
 import com.spellblade.model.Effect;
-import com.spellblade.model.Talent;
 import com.spellblade.model.screens.TalentScreen;
 import com.spellblade.repository.AttributeLkpRepository;
 import com.spellblade.repository.EffectRepository;
@@ -47,11 +46,6 @@ public class TalentController {
         result.getTalents().forEach(t-> effectList.addAll(effects.findByNameContainingIgnoreCase(t.getName())));
         result.setEffects(effectList);
         return result;
-    }
-
-    @QueryMapping
-    public List<Talent> getTalentList(){
-        return talents.findAll();
     }
 
     @QueryMapping

@@ -1,31 +1,18 @@
 type Query {
     saveCharacter(characterDAO: inputCharacterDAO): CharacterDAO
     charactersByUserId(userId: String): [CharacterObject]
-    characterById(characterId: String): CharacterDAO
     fullCharacterById(characterId: String): CharacterDAO
-    createInventoryItem(inventoryItem: inputInventory): InventoryDAO
     getCharacterInventory(characterId: String): [InventoryDAO]
-    getCharacterInventoryByType(characterId: String, itemType: String): [InventoryDAO]
     getItemListByType(itemType: String): [Item]
-    getWeaponList: [Item]
-    getTalentList: [Talent]
     getTalentScreen: TalentScreen
     getAttributeList: [Attribute]
-    getAncestryList(source: String): [Ancestry]
-    getTraitsList(type: String): [Trait]
-    getBackgroundList(source: String): [Background]
     getBackgroundScreen(source:String): BackgroundScreen
-    getProficiencyNames(proficiencies: String): [ProficiencyDAO]
-    getTalentAndAttributeData(talent1Name: String, talent2Name: String): [TalentScreen]
-    calculateState(character: inputCharacterObject): CalculatedState
     getCharacterStateById(id: String): CharacterState
-    getAllSpells: [Spell]
     getFilteredSpells(sources: [String]): [Spell]
     createGame(ownerId: String): Game
     saveGame(game: inputGame): Game
     getGameById(gameId:String): GameDAO
     getEquipmentScreen(characterId: String): EquipmentScreen
-    createSpellCharacter(characterId: String, spellId: String): SpellCharacter
 }
 
 type Mutation {
@@ -79,8 +66,6 @@ input inputCharacterObject {
 }
 
 type CharacterState {
-    id: String
-    characterId: String
     hitPoints: Int
     armor: Int
     wounds: Int
@@ -90,8 +75,6 @@ type CharacterState {
 }
 
 input inputCharacterState {
-    id: String
-    characterId: String
     hitPoints: Int
     armor: Int
     wounds: Int

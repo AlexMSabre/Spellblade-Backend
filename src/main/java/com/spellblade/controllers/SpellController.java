@@ -29,14 +29,12 @@ public class SpellController {
     }
 
     @QueryMapping
-    public List<Spell> getAllSpells() {
-        return spells.findAll();
-    }
-
-    @QueryMapping
     public List<Spell> getFilteredSpells(@Argument List<String> sources){
         List<Spell> result= new ArrayList<>();
-        sources.forEach(f->result.addAll(spells.findBySourceContaining(f)));
+        if(!sources.isEmpty())
+            sources.forEach(f->result.addAll(spells.findBySourceContaining(f)));
+        else
+            result.addAll(spells.findAll());
         return result;
     }
 
