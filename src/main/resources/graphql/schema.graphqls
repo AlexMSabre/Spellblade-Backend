@@ -13,6 +13,7 @@ type Query {
     saveGame(game: inputGame): Game
     getGameById(gameId:String): GameDAO
     getEquipmentScreen(characterId: String): EquipmentScreen
+    getEffectList: [Effect]
 }
 
 type Mutation {

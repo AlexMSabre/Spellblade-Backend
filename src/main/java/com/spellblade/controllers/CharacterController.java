@@ -8,6 +8,7 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import com.spellblade.model.CharacterObject;
+import com.spellblade.model.Effect;
 import com.spellblade.model.dao.CharacterDAO;
 import com.spellblade.model.dao.InventoryDAO;
 import com.spellblade.model.dao.SpellDAO;
@@ -40,6 +41,7 @@ public class CharacterController {
     private final ItemOperations itemOperations;
     private final StateOperations stateOperations;
     private final SpellOperations spellOperations;
+    private final EffectRepository effects;
 
     public CharacterController(InventoryRepository inventory, AttributeLkpRepository attribute, EffectRepository effects, ItemLkpRepository items,
                             TalentLkpRepository talents, CharacterObjectRepository characters, AncestryRepository ancestries, BackgroundRepository backgrounds,
@@ -47,6 +49,7 @@ public class CharacterController {
 
         this.items = items;
         this.characters = characters;
+        this.effects = effects;
         this.itemOperations = new ItemOperations(items, inventory);
         this.stateOperations = new StateOperations(effects);                                                                
         this.traitOperations = new TraitOperations(ancestries, traits, backgrounds, effects);
@@ -114,5 +117,10 @@ public class CharacterController {
     public boolean deleteCharacter(@Argument String characterId){
         characters.deleteById(characterId);
         return true;
+    }
+
+    @QueryMapping
+    public List<Effect> getEffectList(){
+        return effects.findAll();
     }
 }
