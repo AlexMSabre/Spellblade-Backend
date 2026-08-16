@@ -36,6 +36,9 @@ public class CharacterObject {
     private String size;
     private List<String> proficiencies;
     private CharacterState state;
+    private String patronDamageType;
+    private String elementDamageType;
+    private String elementName;
 
     public CharacterObject(){}
 

@@ -44,6 +44,9 @@ type CharacterObject {
     size: String
     proficiencies: [String]
     state: CharacterState
+    patronDamageType: String
+    elementDamageType: String
+    elementName: String
 }
 
 input inputCharacterObject {
@@ -64,6 +67,9 @@ input inputCharacterObject {
     size: String
     proficiencies: [String]
     state: inputCharacterState
+    patronDamageType: String
+    elementDamageType: String
+    elementName: String
 }
 
 type CharacterState {
