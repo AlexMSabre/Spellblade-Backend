@@ -18,6 +18,7 @@ public class CharacterState {
     private int hitPoints;
     private int armor;
     private int manaPoints;
+    private int wounds;
     private List<Effect> inactiveEffects;
     private List<Effect> activeEffects;
 

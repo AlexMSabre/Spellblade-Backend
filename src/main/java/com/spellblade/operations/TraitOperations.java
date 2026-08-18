@@ -32,6 +32,7 @@ public class TraitOperations{
         List<Trait> traitResults = traits.findByTraitType("Parent Background");
         traitResults.addAll(traits.findByTraitType("Child Background"));
         traitResults.addAll(traits.findByTraitType("Ancestry"));
+        traitResults.addAll(traits.findByTraitType("Magic Sense"));
         result.setTraits(traitResults);
         List<String> effectNames = new ArrayList<>();
         result.getTraits().forEach(t->effectNames.add(t.getName()));
