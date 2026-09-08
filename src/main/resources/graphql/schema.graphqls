@@ -187,6 +187,7 @@ type Inventory {
     equipped: Boolean
     proficiency: Int
     quantity: Int
+    pinned: Boolean
 }
 
 input inputInventory {
@@ -194,7 +195,9 @@ input inputInventory {
     characterId: String
     itemId: String
     equipped: Boolean
+    proficiency: Int
     quantity: Int
+    pinned: Boolean
 }
 
 type Item {

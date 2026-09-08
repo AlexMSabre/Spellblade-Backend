@@ -14,6 +14,7 @@ public class Inventory {
     private String characterId;
     private boolean equipped;
     private int quantity;
+    private boolean pinned;
     
     public Inventory(){}
 
@@ -22,5 +23,6 @@ public class Inventory {
         this.characterId = characterId;
         this.quantity = quantity;
         equipped = false;
+        pinned = false;
     }
 }
