@@ -16,5 +16,6 @@ import com.spellblade.model.Effect;
 public interface EffectRepository extends MongoRepository<Effect, String> {  
     Effect findByName(String name);
     List<Effect> findByNameContainingIgnoreCase(String name);
+    List<Effect> findByNameIn(List<String> names);
     List<Effect> findByEffectType(int Type);
 }

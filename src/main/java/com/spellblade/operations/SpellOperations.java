@@ -21,13 +21,18 @@ public class SpellOperations{
         this.spellCharacters = spellCharacters;
     }
 
-    public void saveUpdateSpellDAOs(List<SpellDAO> newSpellDAOs){
+    public List<SpellDAO> saveUpdateSpellDAOs(List<SpellDAO> newSpellDAOs){
         List<SpellCharacter> newCharacterSpells = extractSpellList(newSpellDAOs);
-        saveUpdateSpells(newCharacterSpells);
+        if(!newCharacterSpells.isEmpty()){
+            saveUpdateSpells(newCharacterSpells);
+            String characterId = newCharacterSpells.get(0).getCharacterId();
+            return createSpellDAOList(characterId);
+        }
+        return new ArrayList<>();
     }
 
     public void saveUpdateSpells(List<SpellCharacter> characterSpells){
-        String characterId = characterSpells.get(1).getCharacterId();
+        String characterId = characterSpells.get(0).getCharacterId();
         List<SpellCharacter> removeList = getCharacterSpells(characterId);
         for(SpellCharacter characterSpell : characterSpells){
             removeList.removeIf((e)->e.getId().equals(characterSpell.getId()));

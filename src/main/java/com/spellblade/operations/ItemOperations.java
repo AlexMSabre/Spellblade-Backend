@@ -24,13 +24,11 @@ public class ItemOperations{
     public void saveUpdateItems(List<InventoryDAO> newInventoryDAO, String characterId){
         List<Inventory> newInventory = extractInventoryList(newInventoryDAO);
         List<Inventory> removeList = getcharacterInventory(characterId);
-        System.out.println("-----Items------");
 
         for(Inventory inventoryItem : newInventory){
             removeList.removeIf((e)->e.getId().equals(inventoryItem.getId()));
             inventoryItem.setCharacterId(characterId);
             inventory.save(inventoryItem);
-            System.out.println(inventoryItem);
         }
 
         removeList.forEach((e)->{inventory.delete(e);});
@@ -48,7 +46,7 @@ public class ItemOperations{
         return inventory.findByCharacterId(characterId);
     }
 
-    public List<InventoryDAO> createInventoryDAOList(String characterId){
+    public List<InventoryDAO>  createInventoryDAOList(String characterId){
         List<InventoryDAO> results = new ArrayList<>();
         //finds the inventory item, then gets the item data, then puts both into an output object.
         inventory.findByCharacterId(characterId).forEach(a -> {
@@ -93,17 +91,16 @@ public class ItemOperations{
         return result;
     }
 
-    public List<ProficiencyDAO> getProficiencyNames(String proficiencies){
+    public List<ProficiencyDAO> getProficiencyNames(List<String> proficiencies){
         //split the proficiencies apart
-        String[] proficiencyIds = proficiencies.split(",");
         List<ProficiencyDAO> results = new ArrayList();
 
-        for(String prof : proficiencyIds){
+        for(String prof : proficiencies){
             //if a character has mastery in a weapon, it will be marked with a "-m" at the end.
             //so remove the -m if it exists before grabbing the data, 
             if(!prof.equals("null")){
                 String[] mastery = prof.split("-");
-                Item result = items.findById(mastery[0]).orElseThrow();
+                Item result = items.findByName(mastery[0]);
                 //and use the length to tell if -m exists
                 results.add(new ProficiencyDAO(result, mastery.length>1));
             }

@@ -1,27 +1,19 @@
 type Query {
     saveCharacter(characterDAO: inputCharacterDAO): CharacterDAO
     charactersByUserId(userId: String): [CharacterObject]
-    characterById(characterId: String): CharacterDAO
     fullCharacterById(characterId: String): CharacterDAO
-    createInventoryItem(inventoryItem: inputInventory): InventoryDAO
     getCharacterInventory(characterId: String): [InventoryDAO]
-    getCharacterInventoryByType(characterId: String, itemType: String): [InventoryDAO]
     getItemListByType(itemType: String): [Item]
-    getWeaponList: [Item]
-    getTalentsList: [String]
-    getAncestryList(source: String): [Ancestry]
-    getTraitsList(type: String): [Trait]
-    getBackgroundList(source: String): [Background]
-    getBackgroundScreen(source:String): BackgroundDAO
-    getProficiencyNames(proficiencies: String): [ProficiencyDAO]
-    getTalentAndAttributeData(talent1Name: String, talent2Name: String): [TalentDAO]
-    calculateState(state: inputCharacterState, character: inputCharacterObject): CalculatedState
+    getTalentScreen: TalentScreen
+    getAttributeList: [Attribute]
+    getBackgroundScreen(source:String): BackgroundScreen
     getCharacterStateById(id: String): CharacterState
-    getAllSpells: [Spell]
+    getFilteredSpells(sources: [String]): [Spell]
     createGame(ownerId: String): Game
     saveGame(game: inputGame): Game
     getGameById(gameId:String): GameDAO
-    createSpellCharacter(characterId: String, spellId: String): SpellCharacter
+    getEquipmentScreen(characterId: String): EquipmentScreen
+    getEffectList: [Effect]
 }
 
 type Mutation {
@@ -32,6 +24,7 @@ type Mutation {
     modifyPartyInventoryItem(inventoryItem: inputPartyInventory): PartyInventory
     saveSpellCharacter(characterSpells: [inputSpellCharacter]): Int 
     changeItemOwner(inventoryItem: inputInventory, newOwnerId: String, transferQuantity: Int): Int
+    deleteCharacter(characterId: String): Boolean
 }
 
 type CharacterObject {
@@ -39,18 +32,22 @@ type CharacterObject {
     userId: String
     name: String
     attributeLevel: Int
-    attribute1: Int
-    attribute2: Int
-    talent1: String
-    talent2: String
-    size: String
-    ancestry: String
-    background: String
+    talent1: Talent
+    talent2: Talent
+    attributes1: [Attribute]
+    attributes2: [Attribute]
+    ancestry: AncestryInner
+    background: BackgroundInner
     baseFitness: Int
     basePrecision: Int
     baseFocus: Int
     baseSense: Int
-    proficiencies: String
+    size: String
+    proficiencies: [String]
+    state: CharacterState
+    patronDamageType: String
+    elementDamageType: String
+    elementName: String
 }
 
 input inputCharacterObject {
@@ -58,38 +55,59 @@ input inputCharacterObject {
     userId: String
     name: String
     attributeLevel: Int
-    attribute1: Int
-    attribute2: Int
-    talent1: String
-    talent2: String
-    size: String
-    background: String
-    ancestry: String
+    talent1: inputTalent
+    talent2: inputTalent
+    attributes1: [inputAttribute]
+    attributes2: [inputAttribute]
+    ancestry: inputAncestryInner
+    background: inputBackgroundInner
     baseFitness: Int
     basePrecision: Int
     baseFocus: Int
     baseSense: Int
-    proficiencies: String
+    size: String
+    proficiencies: [String]
+    state: inputCharacterState
+    patronDamageType: String
+    elementDamageType: String
+    elementName: String
 }
 
 type CharacterState {
-    id: String
-    characterId: String
     hitPoints: Int
     armor: Int
+    wounds: Int
     manaPoints: Int
-    activeEffects: String
-    inactiveEffects: String
+    activeEffects: [Effect]
+    inactiveEffects: [Effect]
 }
 
 input inputCharacterState {
-    id: String
-    characterId: String
     hitPoints: Int
     armor: Int
+    wounds: Int
     manaPoints: Int
-    activeEffects: String
-    inactiveEffects: String
+    activeEffects: [inputEffect]
+    inactiveEffects: [inputEffect]
+}
+
+type Effect {
+    id: String
+    name: String
+    description: String
+    charProperty: String
+    effectType: Int
+    conditionalCheck: String
+    effect: String
+}
+input inputEffect {
+    id: String
+    name: String
+    description: String
+    charProperty: String
+    effectType: Int
+    conditionalCheck: String
+    effect: String
 }
 
 type CalculatedState {
@@ -169,6 +187,7 @@ type Inventory {
     equipped: Boolean
     proficiency: Int
     quantity: Int
+    pinned: Boolean
 }
 
 input inputInventory {
@@ -176,7 +195,9 @@ input inputInventory {
     characterId: String
     itemId: String
     equipped: Boolean
+    proficiency: Int
     quantity: Int
+    pinned: Boolean
 }
 
 type Item {
@@ -189,8 +210,8 @@ type Item {
     weight: Float
     description: String
     properties: String
-    attack1String: String
-    attack2String: String
+    attack: Attack
+    special: Special
     effectName: String
     baseCost: Int
     rarity: String
@@ -204,31 +225,72 @@ input inputItem {
     equippable: Boolean
     size: String
     weight: Float
+    attack: inputAttack
+    special: inputSpecial
     description: String
     properties: String
-    attack1String: String
-    attack2String: String
     effectName: String
     baseCost: Int
     rarity: String
 }
 
-type Effect {
+type Attack {
+    name: String
+    action: Int
+    range: String
+    damage: String
+    damageType: String
+}
+
+type Special {
+    name: String
+    action: Int
+    description: String
+}
+
+input inputAttack {
+    name: String
+    action: Int
+    range: String
+    damage: String
+    damageType: String
+}
+
+input inputSpecial {
+    name: String
+    action: Int
+    description: String
+}
+
+
+type Pack {
     id: String
     name: String
-    description: String
-    charProperty: String
-    effectType: Int
-    conditionalCheck: String
-    effect: String
+    background: String
+    currency: Int
+    rations: Int
+    salves: Int
+    reagents: String
+    materials: String
+    innerwear: String
+    outerwear: String
+    items: String
 }
 
 type Attribute {
     id: String
     name: String
     talentName: String
-    flag: Int
-    description: String
+    description1: String
+    description2: String
+}
+
+input inputAttribute {
+    id: String
+    name: String
+    talentName: String
+    description1: String
+    description2: String
 }
 
 type Ancestry {
@@ -242,7 +304,37 @@ type Ancestry {
     description: String
 }
 
+type AncestryInner {
+    id: String
+    name: String
+    parent: String
+    source: String
+    trait1: Trait
+    trait2: Trait
+    size: String
+    description: String
+}
+
+input inputAncestryInner {
+    id: String
+    name: String
+    parent: String
+    source: String
+    trait1: inputTrait
+    trait2: inputTrait
+    size: String
+    description: String
+}
+
 type Trait {
+    id: String
+    name: String
+    traitType: String
+    description: String
+    tags: String
+}
+
+input inputTrait {
     id: String
     name: String
     traitType: String
@@ -261,7 +353,44 @@ type Background {
     tags: String
 }
 
+type BackgroundInner {
+    id: String
+    name: String
+    source: String
+    parentTrait: Trait
+    childTrait: Trait
+    deity: String
+    description: String
+    tags: String
+}
+
+input inputBackgroundInner {
+    id: String
+    name: String
+    source: String
+    parentTrait: inputTrait
+    childTrait: inputTrait
+    deity: String
+    description: String
+    tags: String
+}
+
 type Talent {
+    id: String
+    name: String
+    ability1: String
+    ability2: String
+    description: String
+    hpBonus: Int
+    prioritySkills: String
+    role: String
+    complexity: Int
+    keystone: String
+    capstone: String
+    caster: Boolean
+}
+
+input inputTalent {
     id: String
     name: String
     ability1: String
@@ -315,20 +444,15 @@ type GameDAO {
 type CharacterDAO {
     inventory: [InventoryDAO]
     character: CharacterObject
-    attributes: [Attribute]
-    talents: [Talent]
-    proficiencies: [ProficiencyDAO]
-    characterState: CharacterState
     calculatedState: CalculatedState
-    spells: [SpellCharacter]
+    spells: [SpellDAO]
     traitData: TraitDAO
 }
 
 input inputCharacterDAO {
     inventory: [inputInventoryDAO]
     character: inputCharacterObject
-    characterState: inputCharacterState
-    spells: [inputSpellCharacter]
+    spells: [inputSpellDAO]
 }
 
 type ProficiencyDAO {
@@ -336,19 +460,19 @@ type ProficiencyDAO {
     mastery: Boolean
 }
 
-type TalentDAO { 
-    talent: Talent
-    attributes: [Attribute]
+type TalentScreen { 
+    talents: [Talent]
+    effects: [Effect]
 }
 
 type SpellDAO{
     spell: Spell
-    SpellCharacter: SpellCharacter
+    spellCharacter: SpellCharacter
 }
 
 input inputSpellDAO{
     spell: inputSpell
-    SpellCharacter: inputSpellCharacter
+    spellCharacter: inputSpellCharacter
 }
 
 type InventoryDAO {
@@ -367,8 +491,15 @@ type TraitDAO {
     traits: [Trait]
 }
 
-type BackgroundDAO {
+type BackgroundScreen {
     ancestries: [Ancestry]
     backgrounds: [Background]
     traits: [Trait]
+    effects: [Effect]
+}
+
+type EquipmentScreen {
+    inventory: [Inventory]
+    items: [Item]
+    packs: [Pack]
 }

@@ -1,7 +1,9 @@
-package com.spellblade.model;
+package com.spellblade.model.inners;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.spellblade.model.Effect;
 
 import lombok.Data;
 
@@ -9,21 +11,20 @@ import lombok.Data;
 //it is called CharacterObject because Character is already a java type and it helps to be specific
 //@ Document Defines this POJO as belonging to the Character repository
 //@ Data causes the POJO methods to auto-generate
-@Document("CHARACTER_STATE")
+
 @Data
 public class CharacterState {
 
-	@Id private String id;
-    private String characterId;
     private int hitPoints;
     private int armor;
     private int manaPoints;
-    private String inactiveEffects;
-    private String activeEffects;
+    private int wounds;
+    private List<Effect> inactiveEffects;
+    private List<Effect> activeEffects;
 
     public CharacterState(){
-        activeEffects = "";
-        inactiveEffects = "";
+        activeEffects = new ArrayList<>();
+        inactiveEffects = new ArrayList<>();
     }
 
 }

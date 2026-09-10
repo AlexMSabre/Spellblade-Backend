@@ -3,6 +3,9 @@ package com.spellblade.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.spellblade.model.inners.Attack;
+import com.spellblade.model.inners.Special;
+
 import lombok.Data;
 
 @Document("ITEM_LKP")
@@ -18,9 +21,13 @@ public class Item {
     private double weight;
     private String description;
     private String properties;
-    private String attack1String;
-    private String attack2String;
+    private Attack attack;
+    private Special special;
     private String effectName;
     private int baseCost;
     private String rarity;
+
+    
+
+    
 }

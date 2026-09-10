@@ -14,4 +14,6 @@ import com.spellblade.model.Spell;
 
 public interface SpellRepository extends MongoRepository<Spell, String> {  
     List<Spell> findBySource(String source);
+    List<Spell> findBySourceIn(List<String> sources);
+    List<Spell> findBySourceContaining(String source);
 }

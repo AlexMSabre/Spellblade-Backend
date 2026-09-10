@@ -1,5 +1,6 @@
 package com.spellblade.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -28,18 +29,13 @@ public class SpellController {
     }
 
     @QueryMapping
-    public List<Spell> getAllSpells() {
-        return spells.findAll();
-    }
-
-    @QueryMapping
-    public SpellCharacter createSpellCharacter(@Argument String characterId, @Argument String spellId){
-        List<SpellCharacter> characterSpells = spellCharacters.findByCharacterId(characterId);
-        if(!characterSpells.stream().anyMatch(relation->relation.getSpellId().equals(spellId))){
-            return spellCharacters.save(new SpellCharacter(characterId, spellId));
-        } else {
-            return characterSpells.stream().filter(cs->cs.getSpellId().equals(spellId)).findFirst().orElseThrow();
-        }
+    public List<Spell> getFilteredSpells(@Argument List<String> sources){
+        List<Spell> result= new ArrayList<>();
+        if(!sources.isEmpty())
+            sources.forEach(f->result.addAll(spells.findBySourceContaining(f)));
+        else
+            result.addAll(spells.findAll());
+        return result;
     }
 
     @MutationMapping
